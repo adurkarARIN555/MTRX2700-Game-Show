@@ -18,6 +18,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "serial.h"
 
 /** @addtogroup TM32F3xx_HAL_Examples
   * @{
@@ -44,6 +45,7 @@ __IO uint32_t PressCount = 0;
 
 /* Private function prototypes -----------------------------------------------*/
 static void SystemClock_Config(void);
+void SystemClock_Config(void);
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -69,44 +71,34 @@ int main(void)
   /* Configure the system clock to 72 Mhz */
   SystemClock_Config();
 
-  /* Initialize LEDs and User_Button on STM32F3-Discovery ------------------*/
-  BSP_LED_Init(LED4);
-  BSP_LED_Init(LED3);
-  BSP_LED_Init(LED5);
-  BSP_LED_Init(LED7);
-  BSP_LED_Init(LED9);
-  BSP_LED_Init(LED10);
-  BSP_LED_Init(LED8);
-  BSP_LED_Init(LED6);
+  /* USER CODE BEGIN 2 */
+  BSP_GYRO_Init();
+  BSP_ACCELERO_Init();
 
-  BSP_PB_Init(BUTTON_USER, BUTTON_MODE_EXTI);
+  int16_t gyro_values[3];
+  int16_t acc_values[3];
+  int16_t float_acc_values[3];
 
-  /* Toggle LEDs between each Test */
-  while (!UserPressButton) Toggle_Leds();
-  BSP_LED_Off(LED3);
-  BSP_LED_Off(LED4);
-  BSP_LED_Off(LED5);
-  BSP_LED_Off(LED6);
+  SerialInitialise(BAUD_115200, &USART1_PORT, 0x00);
+  uint8_t *string_to_send = "helloabcdefghijklmnopqrstuvwxyz\0";
+  SerialOutputString(string_to_send, &USART1_PORT);
+  HAL_Delay(10);
+  while(1){
+
+  }
 
   /* 1. Start Test: Wait For User inputs -------------------------------------*/
-  while (1)
-  {
-    UserPressButton = 0;
-    BSP_examples[DemoIndex++].DemoFunc();
-
-    /* If all Demo has been already executed, Reset DemoIndex to restart BSP example*/
-    if(DemoIndex >= COUNT_OF_EXAMPLE(BSP_examples))
-    {
-      DemoIndex = 0;
-    }
-    /* Toggle LEDs between each Test */
-    UserPressButton = 0;
-    while (!UserPressButton) Toggle_Leds();
-    BSP_LED_Off(LED3);
-    BSP_LED_Off(LED4);
-    BSP_LED_Off(LED5);
-    BSP_LED_Off(LED6);
-  }
+//  while (1)
+//  {
+//  SerialOutputString(string_to_send, &USART1_PORT);
+//  BSP_GYRO_GetXYZ(&gyro_values[0]);
+//  BSP_ACCELERO_GetXYZ(&acc_values[0]);
+//
+//  float_acc_values[0] = acc_values[0] / 1500;
+//  float_acc_values[1] = acc_values[1] / 1500;
+//  float_acc_values[2] = acc_values[2] / 1500;
+//
+//  }
 }
 
 /**
