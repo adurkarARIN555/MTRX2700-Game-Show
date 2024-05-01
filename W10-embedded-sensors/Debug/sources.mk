@@ -29,13 +29,6 @@ Core/Src/STMF3disco-BSP/Debug/Src/i3g4250d \
 Core/Src/STMF3disco-BSP/Debug/Src/l3gd20 \
 Core/Src/STMF3disco-BSP/Debug/Src/lsm303agr \
 Core/Src/STMF3disco-BSP/Debug/Src/lsm303dlhc \
-Core/Src/STMF3disco-BSP/Drivers/CMSIS/Device/ST/STM32F3xx/Source/Templates \
-Core/Src/STMF3disco-BSP/Src/BSP \
-Core/Src/STMF3disco-BSP/Src \
-Core/Src/STMF3disco-BSP/Src/i3g4250d \
-Core/Src/STMF3disco-BSP/Src/l3gd20 \
-Core/Src/STMF3disco-BSP/Src/lsm303agr \
-Core/Src/STMF3disco-BSP/Src/lsm303dlhc \
 Core/Src \
 Core/Startup \
 Drivers/STM32F3xx_HAL_Driver/Src \

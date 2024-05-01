@@ -46,8 +46,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3_discovery.h"
 /* Include Gyroscope component driver */
-#include "lsm303dlhc/lsm303dlhc.h"
-#include "lsm303agr/lsm303agr.h"
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc\lsm303dlhc.h"
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\lsm303agr.h"
 
 /** @addtogroup BSP
   * @{

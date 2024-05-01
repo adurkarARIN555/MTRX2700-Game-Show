@@ -46,8 +46,8 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f3_discovery.h"
 /* Include Gyroscope component driver */
-#include <l3gd20/l3gd20.h>
-#include <i3g4250d/i3g4250d.h>
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\l3gd20\l3gd20.h"
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\i3g4250d\i3g4250d.h"
 
 
 /** @addtogroup BSP

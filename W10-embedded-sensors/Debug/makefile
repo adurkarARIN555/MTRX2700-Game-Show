@@ -11,13 +11,6 @@ RM := rm -rf
 -include sources.mk
 -include Drivers/STM32F3xx_HAL_Driver/Src/subdir.mk
 -include Core/Startup/subdir.mk
--include Core/Src/STMF3disco-BSP/Src/lsm303dlhc/subdir.mk
--include Core/Src/STMF3disco-BSP/Src/lsm303agr/subdir.mk
--include Core/Src/STMF3disco-BSP/Src/l3gd20/subdir.mk
--include Core/Src/STMF3disco-BSP/Src/i3g4250d/subdir.mk
--include Core/Src/STMF3disco-BSP/Src/BSP/subdir.mk
--include Core/Src/STMF3disco-BSP/Src/subdir.mk
--include Core/Src/STMF3disco-BSP/Drivers/CMSIS/Device/ST/STM32F3xx/Source/Templates/subdir.mk
 -include Core/Src/STMF3disco-BSP/Debug/Src/lsm303dlhc/subdir.mk
 -include Core/Src/STMF3disco-BSP/Debug/Src/lsm303agr/subdir.mk
 -include Core/Src/STMF3disco-BSP/Debug/Src/l3gd20/subdir.mk
@@ -74,11 +67,11 @@ all: main-build
 main-build: embedded-sensors.elf secondary-outputs
 
 dependents:
-	-cd C:/Users/61411/OneDrive/Desktop/MTRX2700-2024/STMF3disco-BSP/Debug && $(MAKE) all
+	-cd C:/Users/61411/OneDrive/Desktop/MTRX2700-Game-Show/STMF3disco-BSP/Debug && $(MAKE) all
 
 # Tool invocations
-embedded-sensors.elf embedded-sensors.map: $(OBJS) $(USER_OBJS) C:/Users/61411/OneDrive/Desktop/MTRX2700-2024/STMF3disco-BSP/Debug/libF3-components.a C:\Users\61411\OneDrive\Desktop\MTRX2700-2024\W10-embedded-sensors\STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "embedded-sensors.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\61411\OneDrive\Desktop\MTRX2700-2024\W10-embedded-sensors\STM32F303VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="embedded-sensors.map" -Wl,--gc-sections -static -L"C:\Users\61411\OneDrive\Desktop\MTRX2700-2024\STMF3disco-BSP\Debug" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
+embedded-sensors.elf embedded-sensors.map: $(OBJS) $(USER_OBJS) C:/Users/61411/OneDrive/Desktop/MTRX2700-Game-Show/STMF3disco-BSP/Debug/libF3-components.a C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\W10-embedded-sensors\STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "embedded-sensors.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\W10-embedded-sensors\STM32F303VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="embedded-sensors.map" -Wl,--gc-sections -static -L"C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Debug" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -u _printf_float -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -107,6 +100,6 @@ warn-no-linker-script-specified:
 	@echo 'Warning: No linker script specified. Check the linker settings in the build configuration.'
 
 .PHONY: all clean dependents main-build fail-specified-linker-script-missing warn-no-linker-script-specified
-C:/Users/61411/OneDrive/Desktop/MTRX2700-2024/STMF3disco-BSP/Debug/libF3-components.a:
+C:/Users/61411/OneDrive/Desktop/MTRX2700-Game-Show/STMF3disco-BSP/Debug/libF3-components.a:
 
 -include ../makefile.targets

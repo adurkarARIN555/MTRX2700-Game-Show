@@ -21,9 +21,9 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "BSP/stm32f3_discovery.h"
-#include "BSP/stm32f3_discovery_gyroscope.h"
-#include "BSP/stm32f3_discovery_accelerometer.h"
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Inc\BSP\stm32f3_discovery.h"
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Inc\BSP\stm32f3_discovery_gyroscope.h"
+#include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Inc\BSP\stm32f3_discovery_accelerometer.h"
 
 #include "serial.h"
 /* USER CODE END Includes */

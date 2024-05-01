@@ -69,8 +69,10 @@ Src/BSP/stm32f3_discovery_accelerometer.o: \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart_ex.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_wwdg.h \
- ../Src/lsm303dlhc/lsm303dlhc.h ../Src/lsm303dlhc/../Common/accelero.h \
- ../Src/lsm303agr/lsm303agr.h ../Src/lsm303agr/../Common/accelero.h
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc\lsm303dlhc.h \
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc\../Common/accelero.h \
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\lsm303agr.h \
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\../Common/accelero.h
 ../Inc/BSP/stm32f3_discovery_accelerometer.h:
 ../Inc/BSP/stm32f3_discovery.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
@@ -140,7 +142,7 @@ Src/BSP/stm32f3_discovery_accelerometer.o: \
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart_ex.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_wwdg.h:
-../Src/lsm303dlhc/lsm303dlhc.h:
-../Src/lsm303dlhc/../Common/accelero.h:
-../Src/lsm303agr/lsm303agr.h:
-../Src/lsm303agr/../Common/accelero.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc\lsm303dlhc.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc\../Common/accelero.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\lsm303agr.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\../Common/accelero.h:

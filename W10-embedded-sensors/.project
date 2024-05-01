@@ -3,7 +3,7 @@
 	<name>embedded-sensors</name>
 	<comment></comment>
 	<projects>
-		<project>STMF3disco-BSP</project>
+		<project>F3-components</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

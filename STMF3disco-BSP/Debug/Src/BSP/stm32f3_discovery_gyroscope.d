@@ -68,8 +68,10 @@ Src/BSP/stm32f3_discovery_gyroscope.o: \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart_ex.h \
  ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_wwdg.h \
- ../Src/l3gd20/l3gd20.h ../Src/l3gd20/../Common/gyro.h \
- ../Src/i3g4250d/i3g4250d.h ../Src/i3g4250d/../Common/gyro.h
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\l3gd20\l3gd20.h \
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\l3gd20\../Common/gyro.h \
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\i3g4250d\i3g4250d.h \
+ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\i3g4250d\../Common/gyro.h
 ../Inc/BSP/stm32f3_discovery_gyroscope.h:
 ../Inc/BSP/stm32f3_discovery.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
@@ -139,7 +141,7 @@ Src/BSP/stm32f3_discovery_gyroscope.o: \
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_usart_ex.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal_wwdg.h:
-../Src/l3gd20/l3gd20.h:
-../Src/l3gd20/../Common/gyro.h:
-../Src/i3g4250d/i3g4250d.h:
-../Src/i3g4250d/../Common/gyro.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\l3gd20\l3gd20.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\l3gd20\../Common/gyro.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\i3g4250d\i3g4250d.h:
+C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\i3g4250d\../Common/gyro.h:
