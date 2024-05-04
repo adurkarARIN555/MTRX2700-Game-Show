@@ -5,6 +5,8 @@ from PyQt5.QtCore import QTimer
 import serial
 import numpy as np
 
+steering_sensitivity = 162
+
 def process_steering_data(serial_port):
     line = serial_port.readline().decode("utf-8").strip()
     steering_angle = 0
@@ -17,15 +19,17 @@ def process_steering_data(serial_port):
         else:
             steering_angle = steering_angle_unprocessed
 
-    return(-steering_angle)
+    return(-steering_angle/steering_sensitivity)
         
 
 class DotWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
-        self.dot_delta_z = 0
-        self.dot_z = 500
+        self.delta_angle = 0
+        self.pos_x = 50
+        self.pos_y = 500
+        self.angle = -np.pi/2
         self.serial_port = serial.Serial('/dev/cu.usbmodem142303', 115200)  # Adjust baudrate as per your requirement
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_position)
@@ -36,20 +40,22 @@ class DotWidget(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setBrush(QColor(255, 0, 0))
-        painter.drawEllipse(50, 500, 20, 20)
-        painter.drawLine(60 + int(30*np.cos(self.dot_z/162)), 510 + int(30*np.sin(self.dot_z/162)), 60, 510)
+        painter.drawEllipse(int(self.pos_x) - 10, int(self.pos_y) - 10, 20, 20)
+        painter.drawLine(int(self.pos_x) + int(30*np.cos(self.angle)), int(self.pos_y) + int(30*np.sin(self.angle)), int(self.pos_x), int(self.pos_y))
 
     def update_position(self):
         while self.serial_port.in_waiting:
-            data = process_steering_data(self.serial_port)
+            steering_angle = process_steering_data(self.serial_port)
             try:
-                value = int(data)
+                value = steering_angle
                 # Map the value to the position on the screen
-                self.dot_delta_z = value
-                self.dot_z = self.dot_delta_z + self.dot_z
+                self.delta_angle = value
+                self.angle = self.delta_angle + self.angle
+                self.pos_x = self.pos_x + np.cos(self.angle)
+                self.pos_y = self.pos_y + np.sin(self.angle)
                 self.update()  # Trigger repaint
             except ValueError:
-                print("Invalid data received from serial port:", data)
+                print("Invalid data received from serial port:", steering_angle)
 
 
 if __name__ == '__main__':
