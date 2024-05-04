@@ -10,32 +10,34 @@ def process_steering_data(serial_port):
     steering_angle = 0
     if(line):
         data = (line.split(","))
-        steering_angle_unprocessed = float(data[1])
+        steering_angle_unprocessed = float(data[2]) # Angle
 
         if(100*np.abs(steering_angle_unprocessed) < 50):
             steering_angle = 0
         else:
             steering_angle = steering_angle_unprocessed
 
-    return(steering_angle)
+    return(-steering_angle)
         
 
 class DotWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
-        self.dot_delta_x = 0
-        self.dot_x = 500
-        self.serial_port = serial.Serial('COM10', 115200)  # Adjust baudrate as per your requirement
+        self.dot_delta_z = 0
+        self.dot_z = 500
+        self.serial_port = serial.Serial('/dev/cu.usbmodem142303', 115200)  # Adjust baudrate as per your requirement
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_position)
         self.timer.start(10)  # Update every 100 milliseconds
+    
 
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setBrush(QColor(255, 0, 0))
-        painter.drawEllipse(self.dot_x, 500, 20, 20)
+        painter.drawEllipse(50, 500, 20, 20)
+        painter.drawLine(60 + int(30*np.cos(self.dot_z/162)), 510 + int(30*np.sin(self.dot_z/162)), 60, 510)
 
     def update_position(self):
         while self.serial_port.in_waiting:
@@ -43,11 +45,12 @@ class DotWidget(QWidget):
             try:
                 value = int(data)
                 # Map the value to the position on the screen
-                self.dot_delta_x = value
-                self.dot_x = self.dot_delta_x + self.dot_x
+                self.dot_delta_z = value
+                self.dot_z = self.dot_delta_z + self.dot_z
                 self.update()  # Trigger repaint
             except ValueError:
                 print("Invalid data received from serial port:", data)
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
