@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget
 from PyQt5.QtGui import QPainter, QColor, QImage, QTransform
-from PyQt5.QtCore import QTimer, QObject, pyqtSignal, pyqtSlot, QRect
+from PyQt5.QtCore import QTimer, QObject, pyqtSignal, pyqtSlot, QRect, QRectF, QPointF
 import serial
 import numpy as np
 import threading
@@ -81,11 +81,19 @@ class DotWidget(QWidget):
         painter.setBrush(QColor(255, 255, 255))
         painter.drawEllipse(inner_track_x, inner_track_y, inner_track_width, inner_track_height)
         painter.setBrush(QColor(255, 0, 0))
+
         transformed_kart_image = kart_image.transformed(QTransform().rotate(self.steering_output*(180/np.pi) + 90))
-        #scale_factor = scaling_factor(self.steering_output)
-        #transformed_scaled_kart_image = transformed_kart_image.transformed(QTransform().scale(scale_factor, scale_factor))
-        #painter.drawImage(QRect(int(self.pos_x) - 50, int(self.pos_y) - 50, int(60 + 15*scale_factor), int(60 + 15*scale_factor)), transformed_kart_image)
-        painter.drawImage(QRect(int(self.pos_x) - 50, int(self.pos_y) - 50, 100, 100), transformed_kart_image)
+
+        #qrect_obj = QRect(int(self.pos_x) - 50, int(self.pos_y) - 50, 100, 100)
+        qrect_obj = QRectF(int(self.pos_x) - 50, int(self.pos_y) - 50, 100, 100)
+
+
+        center = qrect_obj.center()
+        transform_for_rect = QTransform().translate(center.x(), center.y()).rotate(self.steering_output*(180/np.pi) + 90).translate(-center.x(), -center.y())
+
+        rotated_rect = transform_for_rect.mapRect(qrect_obj)
+
+        painter.drawImage(rotated_rect, transformed_kart_image)
         painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
                          int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
                          int(self.pos_x), int(self.pos_y))
