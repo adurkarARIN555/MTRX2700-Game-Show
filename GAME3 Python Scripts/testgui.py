@@ -38,6 +38,7 @@ class DotWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
+        self.setStyleSheet("background-color: white;")
         self.delta_angle = 0
         self.pos_x = 200
         self.pos_y = 500
@@ -58,7 +59,8 @@ class DotWidget(QWidget):
         painter.setBrush(QColor(255, 0, 0))
         painter.drawEllipse(int(self.pos_x) - 10, int(self.pos_y) - 10, 20, 20)
         painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
-                         int(self.pos_y) + int(30 * np.sin(self.steering_output)), int(self.pos_x), int(self.pos_y))
+                         int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
+                         int(self.pos_x), int(self.pos_y))
 
     @pyqtSlot(float)
     def update_steering(self, steering_angle):
