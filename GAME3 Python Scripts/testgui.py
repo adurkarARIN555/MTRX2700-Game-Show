@@ -9,6 +9,17 @@ import os
 
 steering_sensitivity = 200
 
+outer_track_width = 1000
+outer_track_height = 625
+outer_track_x = 200
+outer_track_y = 75
+
+inner_track_width = 700
+inner_track_height = 325
+inner_track_x = 350
+inner_track_y = 220
+
+
 def process_steering_data(serial_port):
     line = serial_port.readline().decode("utf-8").strip()
     steering_angle = 0
@@ -49,11 +60,11 @@ class DotWidget(QWidget):
         self.setGeometry(100, 100, 400, 200)
         self.setStyleSheet("background-color: white;")
         self.delta_angle = 0
-        self.pos_x = 200
+        self.pos_x = 400
         self.pos_y = 500
         self.angle = 0
         self.steering_output = 0
-        self.serial_port = serial.Serial('/dev/cu.usbmodem1421303', 115200)  # Adjust baudrate as per your requirement
+        self.serial_port = serial.Serial('COM10', 115200)  # Adjust baudrate as per your requirement
         self.serial_reader = SerialReader(self.serial_port)
         self.serial_thread = threading.Thread(target=self.serial_reader.run)
         self.serial_reader.data_received.connect(self.update_steering)
@@ -66,9 +77,9 @@ class DotWidget(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         painter.setBrush(QColor(0, 70, 70))
-        painter.drawEllipse(200, 75, 1000, 625)
+        painter.drawEllipse(outer_track_x, outer_track_y, outer_track_width, outer_track_height)
         painter.setBrush(QColor(255, 255, 255))
-        painter.drawEllipse(350, 220, 700, 325)
+        painter.drawEllipse(inner_track_x, inner_track_y, inner_track_width, inner_track_height)
         painter.setBrush(QColor(255, 0, 0))
         transformed_kart_image = kart_image.transformed(QTransform().rotate(self.steering_output*(180/np.pi) + 90))
         #scale_factor = scaling_factor(self.steering_output)
@@ -92,13 +103,31 @@ class DotWidget(QWidget):
             print("Invalid data received from serial port:", steering_angle)
 
     def update_position(self):
-        self.pos_x = self.pos_x + 2.5 * np.cos(self.steering_output)
-        self.pos_y = self.pos_y + 2.5 * np.sin(self.steering_output)
+
+        self.pos_x = self.pos_x + 3 * np.cos(self.steering_output)
+        self.pos_y = self.pos_y + 3 * np.sin(self.steering_output)
+
+        if(check_collided_outer(self.pos_x, self.pos_y) or check_collided_inner(self.pos_x, self.pos_y)):
+            self.pos_x = 400
+            self.pos_y = 500
+
         self.update()  # Trigger repaint
 
     def closeEvent(self, event):
         self.serial_reader.stop()
         self.serial_thread.join()
+
+def check_collided_outer(x, y):
+    x_block = ((2*x - 2*outer_track_x - outer_track_width)/outer_track_width)**2
+    y_block = ((2*y - 2*outer_track_y - outer_track_height)/outer_track_height)**2
+    LHS = x_block + y_block
+    return(LHS > 1)
+
+def check_collided_inner(x, y):
+    x_block = ((2*x - 2*inner_track_x - inner_track_width)/inner_track_width)**2
+    y_block = ((2*y - 2*inner_track_y - inner_track_height)/inner_track_height)**2
+    LHS = x_block + y_block
+    return(LHS < 1)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
