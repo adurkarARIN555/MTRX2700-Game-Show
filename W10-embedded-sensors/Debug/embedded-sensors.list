@@ -1039,7 +1039,7 @@ int main(void)
  8000c56:	eec7 7a26 	vdiv.f32	s15, s14, s13
  8000c5a:	edc7 7a06 	vstr	s15, [r7, #24]
 
-	  sprintf(string_to_send, "%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
+	  sprintf(string_to_send, "%0.6f,%0.6f,%0.6f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
  8000c5e:	edd7 7a09 	vldr	s15, [r7, #36]	; 0x24
  8000c62:	ed9f 7a2b 	vldr	s14, [pc, #172]	; 8000d10 <main+0x168>
  8000c66:	eec7 6a87 	vdiv.f32	s13, s15, s14
@@ -1062,20 +1062,20 @@ int main(void)
  8000ca4:	4689      	mov	r9, r1
 			  float_acc_values[0], float_acc_values[1], float_acc_values[2]);
  8000ca6:	693b      	ldr	r3, [r7, #16]
-	  sprintf(string_to_send, "%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
+	  sprintf(string_to_send, "%0.6f,%0.6f,%0.6f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
  8000ca8:	4618      	mov	r0, r3
  8000caa:	f7ff fc4d 	bl	8000548 <__aeabi_f2d>
  8000cae:	4682      	mov	sl, r0
  8000cb0:	468b      	mov	fp, r1
 			  float_acc_values[0], float_acc_values[1], float_acc_values[2]);
  8000cb2:	697b      	ldr	r3, [r7, #20]
-	  sprintf(string_to_send, "%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
+	  sprintf(string_to_send, "%0.6f,%0.6f,%0.6f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
  8000cb4:	4618      	mov	r0, r3
  8000cb6:	f7ff fc47 	bl	8000548 <__aeabi_f2d>
  8000cba:	e9c7 0100 	strd	r0, r1, [r7]
 			  float_acc_values[0], float_acc_values[1], float_acc_values[2]);
  8000cbe:	69bb      	ldr	r3, [r7, #24]
-	  sprintf(string_to_send, "%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
+	  sprintf(string_to_send, "%0.6f,%0.6f,%0.6f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
  8000cc0:	4618      	mov	r0, r3
  8000cc2:	f7ff fc41 	bl	8000548 <__aeabi_f2d>
  8000cc6:	4602      	mov	r2, r0

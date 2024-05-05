@@ -123,7 +123,7 @@ int main(void)
 	  float_acc_values[1] = (float)acc_values[1] / 1500.;
 	  float_acc_values[2] = (float)acc_values[2] / 1500.;
 
-	  sprintf(string_to_send, "%0.3f,%0.3f,%0.3f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
+	  sprintf(string_to_send, "%0.6f,%0.6f,%0.6f,%0.3f,%0.3f,%0.3f\r\n", gyro_values[0]/20000, gyro_values[1]/20000, gyro_values[2]/20000,
 			  float_acc_values[0], float_acc_values[1], float_acc_values[2]);
 	  SerialOutputString(string_to_send, &USART1_PORT);
 
