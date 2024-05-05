@@ -1,7 +1,7 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtGui import QPainter, QColor
-from PyQt5.QtCore import QTimer, QObject, pyqtSignal, pyqtSlot
+from PyQt5.QtGui import QPainter, QColor, QImage
+from PyQt5.QtCore import QTimer, QObject, pyqtSignal, pyqtSlot, QRect
 import serial
 import numpy as np
 import threading
@@ -44,7 +44,7 @@ class DotWidget(QWidget):
         self.pos_y = 500
         self.angle = 0
         self.steering_output = 0
-        self.serial_port = serial.Serial('COM10', 115200)  # Adjust baudrate as per your requirement
+        self.serial_port = serial.Serial('/dev/cu.usbmodem1421303', 115200)  # Adjust baudrate as per your requirement
         self.serial_reader = SerialReader(self.serial_port)
         self.serial_thread = threading.Thread(target=self.serial_reader.run)
         self.serial_reader.data_received.connect(self.update_steering)
@@ -56,8 +56,13 @@ class DotWidget(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
+        painter.setBrush(QColor(0, 70, 70))
+        painter.drawEllipse(200, 75, 1000, 625)
+        painter.setBrush(QColor(255, 255, 255))
+        painter.drawEllipse(350, 220, 700, 325)
         painter.setBrush(QColor(255, 0, 0))
         painter.drawEllipse(int(self.pos_x) - 10, int(self.pos_y) - 10, 20, 20)
+        #painter.drawImage(QRect(int(self.pos_x) - 10, int(self.pos_y) - 10, 200, 200), QImage("home//GAME3 Images/mario-kart-5639670_640.png"))
         painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
                          int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
                          int(self.pos_x), int(self.pos_y))
