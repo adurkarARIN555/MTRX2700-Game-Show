@@ -1,10 +1,11 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget
-from PyQt5.QtGui import QPainter, QColor, QImage
+from PyQt5.QtGui import QPainter, QColor, QImage, QTransform
 from PyQt5.QtCore import QTimer, QObject, pyqtSignal, pyqtSlot, QRect
 import serial
 import numpy as np
 import threading
+import os
 
 steering_sensitivity = 200
 
@@ -16,6 +17,11 @@ def process_steering_data(serial_port):
         steering_angle = float(data[2])  # Angle
 
     return -steering_angle / steering_sensitivity
+
+def scaling_factor(theta):
+    #factor = np.abs(np.sin(theta))+np.abs(np.cos(theta))
+    factor = np.sin(4*(theta-(np.pi/8))) + 2
+    return(factor)
 
 class SerialReader(QObject):
     data_received = pyqtSignal(float)
@@ -33,6 +39,9 @@ class SerialReader(QObject):
 
     def stop(self):
         self.running = False
+
+image_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "mario-kart-5639670_640.png")
+kart_image = QImage(image_path)
 
 class DotWidget(QWidget):
     def __init__(self):
@@ -61,11 +70,15 @@ class DotWidget(QWidget):
         painter.setBrush(QColor(255, 255, 255))
         painter.drawEllipse(350, 220, 700, 325)
         painter.setBrush(QColor(255, 0, 0))
-        painter.drawEllipse(int(self.pos_x) - 10, int(self.pos_y) - 10, 20, 20)
-        #painter.drawImage(QRect(int(self.pos_x) - 10, int(self.pos_y) - 10, 200, 200), QImage("home//GAME3 Images/mario-kart-5639670_640.png"))
+        transformed_kart_image = kart_image.transformed(QTransform().rotate(self.steering_output*(180/np.pi) + 90))
+        #scale_factor = scaling_factor(self.steering_output)
+        #transformed_scaled_kart_image = transformed_kart_image.transformed(QTransform().scale(scale_factor, scale_factor))
+        #painter.drawImage(QRect(int(self.pos_x) - 50, int(self.pos_y) - 50, int(60 + 15*scale_factor), int(60 + 15*scale_factor)), transformed_kart_image)
+        painter.drawImage(QRect(int(self.pos_x) - 50, int(self.pos_y) - 50, 100, 100), transformed_kart_image)
         painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
                          int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
                          int(self.pos_x), int(self.pos_y))
+        
 
     @pyqtSlot(float)
     def update_steering(self, steering_angle):
