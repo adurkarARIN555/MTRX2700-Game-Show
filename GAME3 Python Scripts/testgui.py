@@ -28,10 +28,10 @@ def process_steering_data(serial_port):
         steering_angle = 0
         if line:
             data = line.split(",")
-            #print(data)
+            print(data)
             steering_angle = float(data[0])  # Angle
-            acceleration_toggle = (data[1])
-        return [str(-steering_angle / steering_sensitivity), acceleration_toggle]
+            velocity = (data[1])
+        return [str(-steering_angle / steering_sensitivity), velocity]
     except:
         return(["0","0"])
 
@@ -68,12 +68,12 @@ class DotWidget(QWidget):
         self.setGeometry(100, 100, 400, 200)
         self.setStyleSheet("background-color: white;")
         self.delta_angle = 0
-        self.accelerator = 0
+        self.velocity = 0
         self.pos_x = 400
         self.pos_y = 500
         self.angle = 0
         self.steering_output = 0
-        self.serial_port = serial.Serial('/dev/cu.usbmodem142303', 115200)  # Adjust baudrate as per your requirement
+        self.serial_port = serial.Serial('COM10', 115200)  # Adjust baudrate as per your requirement
         self.serial_reader = SerialReader(self.serial_port)
         self.serial_thread = threading.Thread(target=self.serial_reader.run)
         self.serial_reader.data_received.connect(self.update_steering)
@@ -112,8 +112,8 @@ class DotWidget(QWidget):
         try:
             # Map the value to the position on the screen
             self.delta_angle = float(controller_input.split(",")[0])
-            self.accelerator = int(controller_input.split(",")[1])
-            if (self.accelerator == 1):
+            self.velocity = float(controller_input.split(",")[1])
+            if (self.velocity > 0):
                 self.angle = self.delta_angle + self.angle
                 self.steering_output = self.steering_output + self.angle / 10
         except ValueError:
@@ -121,9 +121,8 @@ class DotWidget(QWidget):
 
     def update_position(self):
 
-        if (self.accelerator == 1):
-            self.pos_x = self.pos_x + 3 * np.cos(self.steering_output)
-            self.pos_y = self.pos_y + 3 * np.sin(self.steering_output)
+        self.pos_x = self.pos_x + self.velocity * np.cos(self.steering_output)
+        self.pos_y = self.pos_y + self.velocity * np.sin(self.steering_output)
 
         if(check_collided_outer(self.pos_x, self.pos_y) or check_collided_inner(self.pos_x, self.pos_y)):
             self.pos_x = 400

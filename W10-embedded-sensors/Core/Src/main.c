@@ -111,6 +111,7 @@ int main(void)
   int16_t acc_values[3];
   float float_acc_values[3];
   /* USER CODE END 2 */
+  float velocity = 0;
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -135,7 +136,14 @@ int main(void)
 	  // Dereference the pointer to get the value at that address
 	  int value = *ptr;
 
-	  sprintf(string_to_send, "%0.6f,%d\r\n", gyro_values[2]/20000, value&0x01);
+	  if((value&0x01) && (velocity < 3.5)){
+		  velocity+=0.01;
+	  }
+	  else if(!(value&0x01) && (velocity > 0.01)){
+		  velocity -= 0.02;
+	  }
+
+	  sprintf(string_to_send, "%0.6f,%f\r\n", gyro_values[2]/20000, velocity);
 	  SerialOutputString(string_to_send, &USART1_PORT);
 
 	  HAL_Delay(10);
