@@ -7,7 +7,7 @@ import numpy as np
 import threading
 import os
 
-steering_sensitivity = 200
+steering_sensitivity = 250
 
 outer_track_width = 1000
 outer_track_height = 625
@@ -19,6 +19,8 @@ inner_track_height = 325
 inner_track_x = 350
 inner_track_y = 220
 
+kart_size = 60
+
 
 def process_steering_data(serial_port):
     try:
@@ -26,7 +28,7 @@ def process_steering_data(serial_port):
         steering_angle = 0
         if line:
             data = line.split(",")
-            print(data)
+            #print(data)
             steering_angle = float(data[0])  # Angle
             acceleration_toggle = (data[1])
         return [str(-steering_angle / steering_sensitivity), acceleration_toggle]
@@ -91,8 +93,7 @@ class DotWidget(QWidget):
 
         transformed_kart_image = kart_image.transformed(QTransform().rotate(self.steering_output*(180/np.pi) + 90))
 
-        #qrect_obj = QRect(int(self.pos_x) - 50, int(self.pos_y) - 50, 100, 100)
-        qrect_obj = QRectF(int(self.pos_x) - 50, int(self.pos_y) - 50, 100, 100)
+        qrect_obj = QRectF(int(self.pos_x) - (kart_size/2), int(self.pos_y) - (kart_size/2), kart_size, kart_size)
 
 
         center = qrect_obj.center()
@@ -101,9 +102,9 @@ class DotWidget(QWidget):
         rotated_rect = transform_for_rect.mapRect(qrect_obj)
 
         painter.drawImage(rotated_rect, transformed_kart_image)
-        painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
-                         int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
-                         int(self.pos_x), int(self.pos_y))
+        # painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
+        #                  int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
+        #                  int(self.pos_x), int(self.pos_y))
         
 
     @pyqtSlot(str)
