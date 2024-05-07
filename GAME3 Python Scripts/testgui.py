@@ -27,8 +27,9 @@ def process_steering_data(serial_port):
         data = line.split(",")
         print(data)
         steering_angle = float(data[0])  # Angle
+        acceleration_toggle = (data[1])
 
-    return -steering_angle / steering_sensitivity
+    return [str(-steering_angle / steering_sensitivity), acceleration_toggle]
 
 def scaling_factor(theta):
     #factor = np.abs(np.sin(theta))+np.abs(np.cos(theta))
@@ -36,7 +37,7 @@ def scaling_factor(theta):
     return(factor)
 
 class SerialReader(QObject):
-    data_received = pyqtSignal(float)
+    data_received = pyqtSignal(str)
 
     def __init__(self, serial_port):
         super().__init__()
@@ -46,8 +47,8 @@ class SerialReader(QObject):
     def run(self):
         while self.running:
             if self.serial_port.in_waiting:
-                steering_angle = process_steering_data(self.serial_port)
-                self.data_received.emit(steering_angle)
+                controller_input = process_steering_data(self.serial_port)
+                self.data_received.emit(",".join(controller_input))
 
     def stop(self):
         self.running = False
@@ -61,11 +62,12 @@ class DotWidget(QWidget):
         self.setGeometry(100, 100, 400, 200)
         self.setStyleSheet("background-color: white;")
         self.delta_angle = 0
+        self.accelerator = 0
         self.pos_x = 400
         self.pos_y = 500
         self.angle = 0
         self.steering_output = 0
-        self.serial_port = serial.Serial('COM10', 115200)  # Adjust baudrate as per your requirement
+        self.serial_port = serial.Serial('/dev/cu.usbmodem142303', 115200)  # Adjust baudrate as per your requirement
         self.serial_reader = SerialReader(self.serial_port)
         self.serial_thread = threading.Thread(target=self.serial_reader.run)
         self.serial_reader.data_received.connect(self.update_steering)
@@ -100,21 +102,23 @@ class DotWidget(QWidget):
                          int(self.pos_x), int(self.pos_y))
         
 
-    @pyqtSlot(float)
-    def update_steering(self, steering_angle):
+    @pyqtSlot(str)
+    def update_steering(self, controller_input):
         try:
-            value = steering_angle
             # Map the value to the position on the screen
-            self.delta_angle = value
-            self.angle = self.delta_angle + self.angle
-            self.steering_output = self.steering_output + self.angle / 10
+            self.delta_angle = float(controller_input.split(",")[0])
+            self.accelerator = int(controller_input.split(",")[1])
+            if (self.accelerator == 1):
+                self.angle = self.delta_angle + self.angle
+                self.steering_output = self.steering_output + self.angle / 10
         except ValueError:
-            print("Invalid data received from serial port:", steering_angle)
+            print("Invalid data received from serial port:", controller_input)
 
     def update_position(self):
 
-        self.pos_x = self.pos_x + 3 * np.cos(self.steering_output)
-        self.pos_y = self.pos_y + 3 * np.sin(self.steering_output)
+        if (self.accelerator == 1):
+            self.pos_x = self.pos_x + 3 * np.cos(self.steering_output)
+            self.pos_y = self.pos_y + 3 * np.sin(self.steering_output)
 
         if(check_collided_outer(self.pos_x, self.pos_y) or check_collided_inner(self.pos_x, self.pos_y)):
             self.pos_x = 400
