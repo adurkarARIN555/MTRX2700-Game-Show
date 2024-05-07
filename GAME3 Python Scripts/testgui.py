@@ -21,15 +21,19 @@ inner_track_y = 220
 
 
 def process_steering_data(serial_port):
-    line = serial_port.readline().decode("utf-8").strip()
-    steering_angle = 0
-    if line:
-        data = line.split(",")
-        print(data)
-        steering_angle = float(data[0])  # Angle
-        acceleration_toggle = (data[1])
+    try:
+        line = serial_port.readline().decode("utf-8").strip()
+        steering_angle = 0
+        if line:
+            data = line.split(",")
+            print(data)
+            steering_angle = float(data[0])  # Angle
+            acceleration_toggle = (data[1])
+        return [str(-steering_angle / steering_sensitivity), acceleration_toggle]
+    except:
+        return(["0","0"])
 
-    return [str(-steering_angle / steering_sensitivity), acceleration_toggle]
+    
 
 def scaling_factor(theta):
     #factor = np.abs(np.sin(theta))+np.abs(np.cos(theta))
