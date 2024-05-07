@@ -123,7 +123,19 @@ int main(void)
 	  float_acc_values[1] = (float)acc_values[1] / 1500.;
 	  float_acc_values[2] = (float)acc_values[2] / 1500.;
 
-	  sprintf(string_to_send, "%0.6f\r\n", gyro_values[2]/20000);
+//	  __asm__{
+//
+//	  }
+
+	  int *ptr;
+
+	  // Assign the desired address to the pointer
+	  ptr = (int *)(0x48000000 + 0x10);
+
+	  // Dereference the pointer to get the value at that address
+	  int value = *ptr;
+
+	  sprintf(string_to_send, "%0.6f,%d\r\n", gyro_values[2]/20000, value&0x01);
 	  SerialOutputString(string_to_send, &USART1_PORT);
 
 	  HAL_Delay(10);
