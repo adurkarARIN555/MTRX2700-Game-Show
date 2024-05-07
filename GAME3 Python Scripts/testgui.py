@@ -25,7 +25,8 @@ def process_steering_data(serial_port):
     steering_angle = 0
     if line:
         data = line.split(",")
-        steering_angle = float(data[2])  # Angle
+        print(data)
+        steering_angle = float(data[0])  # Angle
 
     return -steering_angle / steering_sensitivity
 
