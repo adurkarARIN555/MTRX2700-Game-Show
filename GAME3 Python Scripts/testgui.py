@@ -21,6 +21,8 @@ inner_track_y = 220
 
 kart_size = 60
 
+port = "COM10"
+baud = 115200
 
 def process_steering_data(serial_port):
     try:
@@ -73,7 +75,7 @@ class DotWidget(QWidget):
         self.pos_y = 500
         self.angle = 0
         self.steering_output = 0
-        self.serial_port = serial.Serial('COM10', 115200)  # Adjust baudrate as per your requirement
+        self.serial_port = serial.Serial(port, baud)  # Adjust baudrate as per your requirement
         self.serial_reader = SerialReader(self.serial_port)
         self.serial_thread = threading.Thread(target=self.serial_reader.run)
         self.serial_reader.data_received.connect(self.update_steering)
@@ -127,6 +129,7 @@ class DotWidget(QWidget):
         if(check_collided_outer(self.pos_x, self.pos_y) or check_collided_inner(self.pos_x, self.pos_y)):
             self.pos_x = 400
             self.pos_y = 500
+            self.serial_port.write(b'1')
 
         self.update()  # Trigger repaint
 

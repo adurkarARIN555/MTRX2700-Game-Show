@@ -4,4 +4,5 @@
 ../Core/Src/main.c:260:13:MX_SPI1_Init	2
 ../Core/Src/main.c:300:13:MX_USB_PCD_Init	2
 ../Core/Src/main.c:331:13:MX_GPIO_Init	1
-../Core/Src/main.c:382:6:Error_Handler	1
+../Core/Src/main.c:375:6:USART1_EXTI25_IRQHandler	2
+../Core/Src/main.c:390:6:Error_Handler	1
