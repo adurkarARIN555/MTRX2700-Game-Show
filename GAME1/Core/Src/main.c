@@ -25,8 +25,8 @@
 #include <stdio.h>
 #include "serial.h"
 #include "string.h"
-#include <stdlib.h>
 #include "timer.h"
+#include <stdlib.h>
 
 /* USER CODE END Includes */
 
@@ -55,7 +55,6 @@ SPI_HandleTypeDef hspi1;
 
 PCD_HandleTypeDef hpcd_USB_FS;
 
-uint32_t total_time = 0;
 
 /* USER CODE BEGIN PV */
 
@@ -78,8 +77,12 @@ static void MX_ADC4_Init(void);
 
 void enable_clocks() {
 	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOEEN;
-	//RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+
+	// worked
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+	// worked
 }
+
 
 int get_difference(int v1, int v2){
 	int diff = v1 - v2;
@@ -87,6 +90,13 @@ int get_difference(int v1, int v2){
 
 	return diff;
 }
+uint8_t timer_elapsed = 0;
+// worked
+void timer_comp(){
+
+	timer_elapsed++;
+}
+// worked
 
 
 /* USER CODE END 0 */
@@ -132,7 +142,14 @@ int main(void)
   uint16_t pot_val_2_prev = 0;
 
   enable_clocks();
+
   SerialInitialise(BAUD_115200, &USART1_PORT);
+
+  // worked
+  trigger_prescaler(1000);
+  enable_interrupt_timer2();
+  interval_mode(5000, &timer_comp);
+  // worked
 
   /* USER CODE END 2 */
 
@@ -144,6 +161,10 @@ int main(void)
 	  uint8_t buffer[100];
 	  uint8_t buffer1[100];
 	  uint8_t buffer2[100];
+
+	  // worked
+	  uint8_t buffer3[100];
+	  // worked
 
 	  HAL_ADC_Start(&hadc1);
 	  HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
@@ -180,6 +201,9 @@ int main(void)
 		  sprintf(&buffer2[0], ",%d#", pot_val_2_prev);
 	  }
 
+	  // worked
+	  sprintf(&buffer3[0], ",%d#", timer_elapsed);
+	  // worked
 
 	  //HAL_ADC_Stop(&hadc1);
 
@@ -188,7 +212,14 @@ int main(void)
 	  HAL_Delay(150);
 	  SerialOutputString(buffer, &USART1_PORT);
 	  SerialOutputString(buffer2, &USART1_PORT);
+
+	  // worked
+	  SerialOutputString(buffer3, &USART1_PORT);
+	  // worked
+
 	  SerialOutputString(buffer1, &USART1_PORT);
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
