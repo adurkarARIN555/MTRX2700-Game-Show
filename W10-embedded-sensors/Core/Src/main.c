@@ -65,7 +65,7 @@ static void MX_USB_PCD_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
+float velocity = 0;
 /* USER CODE END 0 */
 
 /**
@@ -111,7 +111,7 @@ int main(void)
   int16_t acc_values[3];
   float float_acc_values[3];
   /* USER CODE END 2 */
-  float velocity = 0;
+
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -372,7 +372,15 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void USART1_EXTI25_IRQHandler()
+{
 
+	//Receive char
+	if((USART1->ISR & USART_ISR_RXNE)){
+		//uint8_t dummy = &USART1_PORT->UART->RDR;
+		velocity = 0;
+	}
+}
 /* USER CODE END 4 */
 
 /**

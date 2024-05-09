@@ -5,24 +5,6 @@
 // NOTE: these are stored as pointers because they
 //       are const values so we can't store them directly
 //       in the struct
-struct _SerialPort {
-	volatile uint32_t *BaudRate;
-	volatile uint32_t *ControlRegister1;
-	volatile uint32_t *FlagClearRegister;
-	volatile uint32_t *StatusRegister;
-	volatile uint16_t *DataOutputRegister;
-	volatile uint16_t *DataInputRegister;
-	volatile uint32_t *TimerEnableRegister;
-	volatile uint32_t TimerEnableMask;
-	volatile uint32_t SerialPortGPIO;
-	volatile uint32_t *SerialPinModeRegister;
-	volatile uint32_t SerialPinModeValue;
-	volatile uint32_t *SerialPinSpeedRegister;
-	volatile uint32_t SerialPinSpeedValue;
-	volatile uint8_t *SerialPinAlternatePinRegister;
-	volatile uint8_t SerialPinAlternatePinValue;
-	void (*completion_function)(uint32_t);
-};
 
 
 // The different serial ports require different GPIO ports
@@ -112,7 +94,12 @@ void SerialInitialise(uint32_t baudRate, SerialPort *serial_port, void (*complet
 
 
 	// enable serial port for tx and rx
-	*(serial_port->ControlRegister1) |= USART_CR1_TE | USART_CR1_RE | USART_CR1_UE;
+	*(serial_port->ControlRegister1) |= USART_CR1_TE | USART_CR1_RE | USART_CR1_UE | USART_CR1_RXNEIE;
+
+	NVIC_SetPriority(USART1_IRQn, 1);  // Set Priority
+	NVIC_EnableIRQ(USART1_IRQn);
+
+	__enable_irq();
 }
 
 
