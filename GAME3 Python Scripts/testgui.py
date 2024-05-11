@@ -33,7 +33,7 @@ def process_steering_data(serial_port):
         steering_angle = 0
         if line:
             data = line.split(",")
-            print(data)
+            #print(data)
             steering_angle = float(data[0])  # Angle
             velocity = (data[1])
         return [str(-steering_angle / steering_sensitivity), velocity]
@@ -81,6 +81,8 @@ class DotWidget(QWidget):
         self.pos_y = start_y_pos
         self.angle = 0
         self.steering_output = 0
+        self.passed = 0
+        self.lap_count = 0
         self.serial_port = serial.Serial(port, baud)  # Adjust baudrate as per your requirement
         self.serial_reader = SerialReader(self.serial_port)
         self.serial_thread = threading.Thread(target=self.serial_reader.run)
@@ -109,7 +111,7 @@ class DotWidget(QWidget):
 
         rotated_rect = transform_for_rect.mapRect(qrect_obj)
 
-        painter.drawImage(QRectF(695, 76, 10, 145), finishline_image)
+        painter.drawImage(QRectF(695, 75, 10, 145), finishline_image)
         painter.drawImage(rotated_rect, transformed_kart_image)
         
         # painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
@@ -137,7 +139,17 @@ class DotWidget(QWidget):
         if(check_collided_outer(self.pos_x, self.pos_y) or check_collided_inner(self.pos_x, self.pos_y)):
             self.pos_x = start_x_pos
             self.pos_y = start_y_pos
+            self.passed = 0
             self.serial_port.write(b'1')
+        
+        checkpoint_check = checkpoint(self.pos_x, self.pos_y, self.passed)
+        if (checkpoint_check == 2):
+            self.passed = 1
+        if (checkpoint_check == 1):
+            self.passed = 0
+            self.lap_count += 1
+            print(self.lap_count)
+
 
         self.update()  # Trigger repaint
 
@@ -156,6 +168,16 @@ def check_collided_inner(x, y):
     y_block = ((2*y - 2*inner_track_y - inner_track_height)/inner_track_height)**2
     LHS = x_block + y_block
     return(LHS < 1)
+
+def checkpoint(x, y, passed):
+    if (passed == 0):
+        if ((x >= 670) and (x <= 690) and (y >= 545) and (y <= 700)): 
+            return 2
+    else:
+        if ((x >= 670) and (x <= 690) and (y >= 75) and (y <= 220)):
+            return 1
+    
+    return 0
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
