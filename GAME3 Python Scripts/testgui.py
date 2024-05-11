@@ -19,9 +19,12 @@ inner_track_height = 325
 inner_track_x = 350
 inner_track_y = 220
 
+start_x_pos = 670
+start_y_pos = 150
+
 kart_size = 60
 
-port = "COM10"
+port = "/dev/cu.usbmodem141303"
 baud = 115200
 
 def process_steering_data(serial_port):
@@ -64,6 +67,9 @@ class SerialReader(QObject):
 image_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "mario-kart-5639670_640.png")
 kart_image = QImage(image_path)
 
+f_image_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "finishline.png")
+finishline_image = QImage(f_image_path)
+
 class DotWidget(QWidget):
     def __init__(self):
         super().__init__()
@@ -71,8 +77,8 @@ class DotWidget(QWidget):
         self.setStyleSheet("background-color: white;")
         self.delta_angle = 0
         self.velocity = 0
-        self.pos_x = 400
-        self.pos_y = 500
+        self.pos_x = start_x_pos
+        self.pos_y = start_y_pos
         self.angle = 0
         self.steering_output = 0
         self.serial_port = serial.Serial(port, baud)  # Adjust baudrate as per your requirement
@@ -103,7 +109,9 @@ class DotWidget(QWidget):
 
         rotated_rect = transform_for_rect.mapRect(qrect_obj)
 
+        painter.drawImage(QRectF(695, 76, 10, 145), finishline_image)
         painter.drawImage(rotated_rect, transformed_kart_image)
+        
         # painter.drawLine(int(self.pos_x) + int(30 * np.cos(self.steering_output)),
         #                  int(self.pos_y) + int(30 * np.sin(self.steering_output)), 
         #                  int(self.pos_x), int(self.pos_y))
@@ -127,8 +135,8 @@ class DotWidget(QWidget):
         self.pos_y = self.pos_y + self.velocity * np.sin(self.steering_output)
 
         if(check_collided_outer(self.pos_x, self.pos_y) or check_collided_inner(self.pos_x, self.pos_y)):
-            self.pos_x = 400
-            self.pos_y = 500
+            self.pos_x = start_x_pos
+            self.pos_y = start_y_pos
             self.serial_port.write(b'1')
 
         self.update()  # Trigger repaint
