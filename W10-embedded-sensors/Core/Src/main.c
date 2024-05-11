@@ -83,8 +83,37 @@ void USART1_IRQHandler()
 	}
 }
 
-void read_and_transmit(){
+void enable_clocks() {
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOEEN;
 
+	// worked
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+	// worked
+}
+
+void read_and_transmit(){
+  uint8_t string_to_send[64] = "This is a string !\r\n";
+
+  float gyro_values[3];
+  BSP_GYRO_GetXYZ(&gyro_values[0]);
+
+  int *ptr;
+
+  // Assign the desired address to the pointer
+  ptr = (int *)(0x48000000 + 0x10);
+
+  // Dereference the pointer to get the value at that address
+  int value = *ptr;
+
+  if((value&0x01) && (velocity < 3.5)){
+	  velocity+=0.01;
+  }
+  else if(!(value&0x01) && (velocity > 0.01)){
+	  velocity -= 0.02;
+  }
+
+  sprintf(string_to_send, "%0.6f,%f\r\n", gyro_values[2]/20000, velocity);
+  SerialOutputString(string_to_send, &USART1_PORT);
 }
 
 /* USER CODE END 0 */
@@ -126,9 +155,11 @@ int main(void)
 
 
   SerialInitialise(BAUD_115200, &USART1_PORT, 0x00);
-  uint8_t string_to_send[64] = "This is a string !\r\n";
 
-  float gyro_values[3];
+  enable_clocks();
+  trigger_prescaler(1000);
+  enable_interrupt_timer2();
+  interval_mode(50, &read_and_transmit);
   /* USER CODE END 2 */
 
 
@@ -136,27 +167,7 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  BSP_GYRO_GetXYZ(&gyro_values[0]);
 
-	  int *ptr;
-
-	  // Assign the desired address to the pointer
-	  ptr = (int *)(0x48000000 + 0x10);
-
-	  // Dereference the pointer to get the value at that address
-	  int value = *ptr;
-
-	  if((value&0x01) && (velocity < 3.5)){
-		  velocity+=0.01;
-	  }
-	  else if(!(value&0x01) && (velocity > 0.01)){
-		  velocity -= 0.02;
-	  }
-
-	  sprintf(string_to_send, "%0.6f,%f\r\n", gyro_values[2]/20000, velocity);
-	  SerialOutputString(string_to_send, &USART1_PORT);
-
-	  HAL_Delay(10);
 
 
     /* USER CODE END WHILE */
