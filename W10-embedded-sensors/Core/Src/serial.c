@@ -41,6 +41,7 @@ SerialPort USART1_PORT = {&(USART1->BRR),
 // Input: baudRate is from an enumerated set
 void SerialInitialise(uint32_t baudRate, SerialPort *serial_port, void (*completion_function)(uint32_t)) {
 
+	__disable_irq();
 	serial_port->completion_function = completion_function;
 
 	// enable clock power, system configuration clock and GPIOC
@@ -215,4 +216,11 @@ uint16_t SerialInputDataPacket(uint8_t *buffer, uint16_t length, SerialPort *ser
 	return index;
 
 }
+
+void clear_recieve_register(SerialPort *serial_port){
+	uint8_t *received_char;
+	*received_char = *(serial_port->DataInputRegister);
+
+}
+
 

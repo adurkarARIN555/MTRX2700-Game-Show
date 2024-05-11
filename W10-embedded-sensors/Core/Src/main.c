@@ -66,6 +66,22 @@ static void MX_USB_PCD_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 float velocity = 0;
+
+void USART1_IRQHandler()
+{
+	uint8_t string_to_send[64] = "This is a string !\r\n";
+	sprintf(string_to_send, "%0.6f,%f\r\n", 0, 0);
+    SerialOutputString(string_to_send, &USART1_PORT);
+	//Receive char
+	//SerialOutputString("balls", &USART1_PORT);
+	if((USART1->ISR & USART_ISR_RXNE)){
+		velocity = 0;
+		uint8_t dummy;
+		SerialReceiveChar(&USART1_PORT, &dummy);
+
+	}
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -123,10 +139,6 @@ int main(void)
 	  float_acc_values[0] = (float)acc_values[0] / 1500.;
 	  float_acc_values[1] = (float)acc_values[1] / 1500.;
 	  float_acc_values[2] = (float)acc_values[2] / 1500.;
-
-//	  __asm__{
-//
-//	  }
 
 	  int *ptr;
 
@@ -372,15 +384,7 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
-void USART1_EXTI25_IRQHandler()
-{
 
-	//Receive char
-	if((USART1->ISR & USART_ISR_RXNE)){
-		//uint8_t dummy = &USART1_PORT->UART->RDR;
-		velocity = 0;
-	}
-}
 /* USER CODE END 4 */
 
 /**

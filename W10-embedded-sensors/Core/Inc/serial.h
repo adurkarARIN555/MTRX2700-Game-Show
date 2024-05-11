@@ -74,4 +74,6 @@ uint16_t SerialInputPacketHeader(uint8_t *buffer, SerialPort *serial_port);
 // Returns 1 for success, 0 for timeout/failure
 uint16_t SerialInputDataPacket(uint8_t *buffer, uint16_t length, SerialPort *serial_port);
 
+void clear_recieve_register(SerialPort *serial_port);
+
 #endif
