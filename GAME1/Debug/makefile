@@ -60,8 +60,8 @@ all: main-build
 main-build: twoPot.elf secondary-outputs
 
 # Tool invocations
-twoPot.elf twoPot.map: $(OBJS) $(USER_OBJS) /Users/Admin/Documents/GitHub/A3/twoPot/STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "twoPot.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/Admin/Documents/GitHub/A3/twoPot/STM32F303VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="twoPot.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+twoPot.elf twoPot.map: $(OBJS) $(USER_OBJS) C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\GAME1\STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "twoPot.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\GAME1\STM32F303VCTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="twoPot.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

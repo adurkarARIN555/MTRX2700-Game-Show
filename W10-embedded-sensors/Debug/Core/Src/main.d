@@ -42,7 +42,7 @@ Core/Src/main.o: ../Core/Src/main.c ../Core/Inc/main.h \
  C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc\../Common/accelero.h \
  C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\lsm303agr.h \
  C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\../Common/accelero.h \
- ../Core/Inc/serial.h
+ ../Core/Inc/serial.h ../Core/Inc/timer.h
 ../Core/Inc/main.h:
 ../Drivers/STM32F3xx_HAL_Driver/Inc/stm32f3xx_hal.h:
 ../Core/Inc/stm32f3xx_hal_conf.h:
@@ -88,3 +88,4 @@ C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303dlhc
 C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\lsm303agr.h:
 C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Src\lsm303agr\../Common/accelero.h:
 ../Core/Inc/serial.h:
+../Core/Inc/timer.h:

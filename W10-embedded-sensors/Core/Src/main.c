@@ -26,6 +26,7 @@
 #include "C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\STMF3disco-BSP\Inc\BSP\stm32f3_discovery_accelerometer.h"
 
 #include "serial.h"
+#include "timer.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -82,6 +83,10 @@ void USART1_IRQHandler()
 	}
 }
 
+void read_and_transmit(){
+
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -124,8 +129,6 @@ int main(void)
   uint8_t string_to_send[64] = "This is a string !\r\n";
 
   float gyro_values[3];
-  int16_t acc_values[3];
-  float float_acc_values[3];
   /* USER CODE END 2 */
 
 
@@ -134,11 +137,6 @@ int main(void)
   while (1)
   {
 	  BSP_GYRO_GetXYZ(&gyro_values[0]);
-	  BSP_ACCELERO_GetXYZ(&acc_values[0]);
-
-	  float_acc_values[0] = (float)acc_values[0] / 1500.;
-	  float_acc_values[1] = (float)acc_values[1] / 1500.;
-	  float_acc_values[2] = (float)acc_values[2] / 1500.;
 
 	  int *ptr;
 
