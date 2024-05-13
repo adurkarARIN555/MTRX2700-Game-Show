@@ -1143,7 +1143,7 @@ void read_and_transmit(){
  8000d56:	4603      	mov	r3, r0
  8000d58:	2b00      	cmp	r3, #0
  8000d5a:	d013      	beq.n	8000d84 <read_and_transmit+0x8c>
-	  velocity+=0.013;
+	  velocity+=0.016;
  8000d5c:	4b3a      	ldr	r3, [pc, #232]	; (8000e48 <read_and_transmit+0x150>)
  8000d5e:	681b      	ldr	r3, [r3, #0]
  8000d60:	4618      	mov	r0, r3
@@ -1176,7 +1176,7 @@ void read_and_transmit(){
  8000da2:	4603      	mov	r3, r0
  8000da4:	2b00      	cmp	r3, #0
  8000da6:	d012      	beq.n	8000dce <read_and_transmit+0xd6>
-	  velocity -= 0.017;
+	  velocity -= 0.02;
  8000da8:	4b27      	ldr	r3, [pc, #156]	; (8000e48 <read_and_transmit+0x150>)
  8000daa:	681b      	ldr	r3, [r3, #0]
  8000dac:	4618      	mov	r0, r3
@@ -1228,12 +1228,12 @@ void read_and_transmit(){
  8000e1c:	f3af 8000 	nop.w
  8000e20:	cccccccd 	.word	0xcccccccd
  8000e24:	4010cccc 	.word	0x4010cccc
- 8000e28:	76c8b439 	.word	0x76c8b439
- 8000e2c:	3f8a9fbe 	.word	0x3f8a9fbe
+ 8000e28:	d2f1a9fc 	.word	0xd2f1a9fc
+ 8000e2c:	3f90624d 	.word	0x3f90624d
  8000e30:	47ae147b 	.word	0x47ae147b
  8000e34:	3f847ae1 	.word	0x3f847ae1
- 8000e38:	b020c49c 	.word	0xb020c49c
- 8000e3c:	3f916872 	.word	0x3f916872
+ 8000e38:	47ae147b 	.word	0x47ae147b
+ 8000e3c:	3f947ae1 	.word	0x3f947ae1
  8000e40:	0800965c 	.word	0x0800965c
  8000e44:	48000010 	.word	0x48000010
  8000e48:	200006b0 	.word	0x200006b0
@@ -1297,9 +1297,9 @@ int main(void)
  8000e8e:	f000 fdc8 	bl	8001a22 <trigger_prescaler>
   enable_interrupt_timer2();
  8000e92:	f000 fdaf 	bl	80019f4 <enable_interrupt_timer2>
-  interval_mode(75, &read_and_transmit);
+  interval_mode(100, &read_and_transmit);
  8000e96:	4903      	ldr	r1, [pc, #12]	; (8000ea4 <main+0x4c>)
- 8000e98:	204b      	movs	r0, #75	; 0x4b
+ 8000e98:	2064      	movs	r0, #100	; 0x64
  8000e9a:	f000 fd51 	bl	8001940 <interval_mode>
   /* USER CODE END 2 */
 
