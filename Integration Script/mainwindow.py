@@ -15,13 +15,21 @@ class AnotherWindow(QWidget):
     def __init__(self, argument):
         super().__init__()
         players = argument.split("               ")
+
+
+        button1 = QPushButton(players[0], self)
+        button1.setGeometry(100, 100, 100, 30)
+
+        button2 = QPushButton(players[1], self)
+        button2.setGeometry(100, 70, 100, 30)
+
+        button3 = QPushButton(players[2], self)
+        button3.setGeometry(100, 40, 100, 30)
+
+        button4 = QPushButton(players[3], self)
+        button4.setGeometry(100, 10, 100, 30)
+
         
-        self.button = QPushButton(players[0], self)
-        self.button.setGeometry(100, 100, 100, 30)
-
-        self.button2 = QPushButton(players[1], self)
-        self.button2.setGeometry(100, 60, 100, 30)
-
 
 
 class MainWindow(QMainWindow):
