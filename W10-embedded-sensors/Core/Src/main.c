@@ -105,11 +105,11 @@ void read_and_transmit(){
   // Dereference the pointer to get the value at that address
   int value = *ptr;
 
-  if((value&0x01) && (velocity < 4.2)){
-	  velocity+=0.016;
+  if((value&0x01) && (velocity < 15)){
+	  velocity+=0.2;
   }
   else if(!(value&0x01) && (velocity > 0.01)){
-	  velocity -= 0.02;
+	  velocity -= 0.25;
   }
 
   sprintf(string_to_send, "%0.6f,%f\r\n", gyro_values[2]/20000, velocity);
@@ -159,7 +159,7 @@ int main(void)
   enable_clocks();
   trigger_prescaler(1000);
   enable_interrupt_timer2();
-  interval_mode(100, &read_and_transmit);
+  interval_mode(125, &read_and_transmit);
   /* USER CODE END 2 */
 
 
