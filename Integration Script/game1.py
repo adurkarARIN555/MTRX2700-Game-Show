@@ -127,14 +127,13 @@ class SerialReader(QThread):
 
 
 
-class MainWindow(QMainWindow):
+class GameWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.central_widget = QWidget()
-        self.layout = QVBoxLayout(self.central_widget)
+        self.layout = QVBoxLayout(self)
 
-        # self.button = QPushButton('Change Values', self.central_widget)
+        # self.button = QPushButton('Change Values', self)
         # self.button.clicked.connect(self.update_values)
         # self.button.setMinimumHeight(50) 
         # self.layout.addWidget(self.button)
@@ -157,7 +156,7 @@ class MainWindow(QMainWindow):
         '''
         self.players = ['P1', 'P2', 'P3', 'P4']
 
-        self.dial3 = ColorfulDial(self.central_widget)
+        self.dial3 = ColorfulDial(self)
         self.dial3.setRange(0, 12)
         self.dial3.setFixedSize(200,200)
 
@@ -176,7 +175,7 @@ class MainWindow(QMainWindow):
         # self.layout.addWidget(self.image_label)
 
         #worked
-        self.time_curr = QLabel('', self.central_widget) 
+        self.time_curr = QLabel('', self) 
         self.time_curr.setStyleSheet("QLabel{font-size: 45pt;}")
         self.time_curr.setAlignment(Qt.AlignCenter)
         self.time_and_dial.addWidget(self.dial3)
@@ -191,13 +190,13 @@ class MainWindow(QMainWindow):
 
         
         
-        self.time_current = QLabel("Time: ", self.central_widget)
+        self.time_current = QLabel("Time: ", self)
         self.layout.addWidget(self.time_current)
         self.time_current.setStyleSheet("QLabel{font-size: 60pt;}") 
         self.time_current.setAlignment(Qt.AlignCenter)
 
         # slider1 + dial
-        # self.dial1 = ColorfulDial(self.central_widget)
+        # self.dial1 = ColorfulDial(self)
         # self.dial1.setRange(0, 12)
         # self.dial1.setFixedSize(100,100)
 
@@ -207,12 +206,12 @@ class MainWindow(QMainWindow):
         self.layout_dial_and_label1 = QHBoxLayout()
 
         self.slider_setup1 = QVBoxLayout()
-        self.slider1 = QSlider(Qt.Horizontal, self.central_widget)
+        self.slider1 = QSlider(Qt.Horizontal, self)
         self.slider1.setRange(150, 3650)
         self.slider1.setMinimumHeight(50)  # Set the slider's minimum height
         self.slider_setup1.addWidget(self.slider1)
         self.slider1.setStyleSheet(slider_style)  # Set the slider's style     
-        self.pot_val_1_label = QLabel('', self.central_widget)  
+        self.pot_val_1_label = QLabel('', self)  
         self.pot_val_1_label.setStyleSheet("QLabel{font-size: 40pt;}")
         self.pot_val_1_label.setAlignment(Qt.AlignCenter)
 
@@ -227,7 +226,7 @@ class MainWindow(QMainWindow):
         
 
         # slider2 + Dial
-        # self.dial2 = ColorfulDial(self.central_widget)
+        # self.dial2 = ColorfulDial(self)
         # self.dial2.setRange(0, 12)
         # self.dial2.setFixedSize(100,100)
 
@@ -236,12 +235,12 @@ class MainWindow(QMainWindow):
 
         self.layout_dial_and_label2 = QHBoxLayout()
 
-        self.slider2 = QSlider(Qt.Horizontal, self.central_widget)
+        self.slider2 = QSlider(Qt.Horizontal, self)
         self.slider2.setRange(150, 3650)
         self.slider2.setMinimumHeight(50)  # Set the slider's minimum height
         self.slider_setup2.addWidget(self.slider2)
         self.slider2.setStyleSheet(slider_style)  # Set the slider's style 
-        self.pot_val_2_label = QLabel('', self.central_widget) 
+        self.pot_val_2_label = QLabel('', self) 
         self.pot_val_2_label.setStyleSheet("QLabel{font-size: 40pt;}") 
         self.pot_val_2_label.setAlignment(Qt.AlignCenter)
 
@@ -269,7 +268,7 @@ class MainWindow(QMainWindow):
         # self.dials_layout = QHBoxLayout()
         # self.layout.addLayout(self.dials_layout)
 
-        # self.dial1 = ColorfulDial(self.central_widget)
+        # self.dial1 = ColorfulDial(self)
         # self.dial1.setRange(0, 12)
         # self.dial1.setFixedSize(100,100)
         # self.layout.addWidget(self.dial1)
@@ -292,7 +291,7 @@ class MainWindow(QMainWindow):
 
         self.can_calculate_winner = True
 
-        self.setCentralWidget(self.central_widget)
+        #self.setCentralWidget(self)
 
         self.start_serial_reading('COM9')
 
@@ -437,7 +436,7 @@ class MainWindow(QMainWindow):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main_win = MainWindow()
+    main_win = GameWindow()
     main_win.show()
 
     sys.exit(app.exec_())
