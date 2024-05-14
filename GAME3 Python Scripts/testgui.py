@@ -21,15 +21,19 @@ inner_track_y = 220
 
 kart_size = 60
 
-port = "COM10"
 baud = 115200
 
 class Player:
-    def __init__(self, start_x_pos, start_y_pos):
+    def __init__(self, start_x_pos, start_y_pos, port):
         self.start_x_pos = start_x_pos
         self.start_y_pos = start_y_pos
         self.x_pos = start_x_pos
         self.y_pos = start_y_pos
+
+        self.serial_port = serial.Serial(port, baud)
+        self.serial_reader = SerialReader(self.serial_port)
+        self.serial_thread = threading.Thread(target=self.serial_reader.run)
+        
 
 def process_steering_data(serial_port):
     try:
@@ -70,7 +74,9 @@ finishline_image = QImage(f_image_path)
 
 class GameWindow(QWidget):
     def __init__(self):
-        self.player1 = Player(start_x_pos=670, start_y_pos=150)
+
+        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10")
+
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
         self.setStyleSheet("background-color: white;")
@@ -80,11 +86,8 @@ class GameWindow(QWidget):
         self.steering_output = 0
         self.passed = 0
         self.lap_count = 0
-        self.serial_port = serial.Serial(port, baud)  # Adjust baudrate as per your requirement
-        self.serial_reader = SerialReader(self.serial_port)
-        self.serial_thread = threading.Thread(target=self.serial_reader.run)
-        self.serial_reader.data_received.connect(self.update_steering)
-        self.serial_thread.start()
+        self.player1.serial_reader.data_received.connect(self.update_steering)
+        self.player1.serial_thread.start()
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_position)
         self.timer.start(10)  # Update every 10 milliseconds
@@ -132,7 +135,7 @@ class GameWindow(QWidget):
             self.player1.x_pos = self.player1.start_x_pos
             self.player1.y_pos = self.player1.start_y_pos
             self.passed = 0
-            self.serial_port.write(b'1')
+            self.player1.serial_port.write(b'1')
         
         checkpoint_check = checkpoint(self.player1.x_pos, self.player1.y_pos, self.passed)
         if (checkpoint_check == 2):
@@ -146,8 +149,8 @@ class GameWindow(QWidget):
         self.update()  # Trigger repaint
 
     def closeEvent(self, event):
-        self.serial_reader.stop()
-        self.serial_thread.join()
+        self.player1.serial_reader.stop()
+        self.player1.serial_thread.join()
 
 def check_collided_outer(x, y):
     x_block = ((2*x - 2*outer_track_x - outer_track_width)/outer_track_width)**2
