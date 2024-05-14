@@ -1,58 +1,8 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QWidget
-from PyQt5 import QtCore as qtc
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 
-import game3
 
+import game3, game2
 import sys
-
-from random import randint
-
-
-class AnotherWindow(QWidget):
-    """
-    This "window" is a QWidget. If it has no parent, it
-    will appear as a free-floating window as we want.
-    """
-
-    submitted = qtc.pyqtSignal(str)
-
-    def __init__(self, argument):
-        super().__init__()
-        players = argument.split("               ")
-
-
-        button1 = QPushButton(players[0], self)
-        button1.setGeometry(100, 100, 100, 30)
-
-        button2 = QPushButton(players[1], self)
-        button2.setGeometry(100, 70, 100, 30)
-
-        button3 = QPushButton(players[2], self)
-        button3.setGeometry(100, 40, 100, 30)
-
-        button4 = QPushButton(players[3], self)
-        button4.setGeometry(100, 10, 100, 30)
-
-        button1.clicked.connect(self.button1_pressed)
-        button2.clicked.connect(self.button2_pressed)
-        button3.clicked.connect(self.button3_pressed)
-        button4.clicked.connect(self.button4_pressed)
-
-    def button1_pressed(self):
-        self.submitted.emit("Player 1")
-        self.close()
-
-    def button2_pressed(self):
-        self.submitted.emit("Player 2")
-        self.close()
-
-    def button3_pressed(self):
-        self.submitted.emit("Player 3")
-        self.close()
-
-    def button4_pressed(self):
-        self.submitted.emit("Player 4")
-        self.close()
 
 
 class MainWindow(QMainWindow):
@@ -74,15 +24,21 @@ class MainWindow(QMainWindow):
         self.button.clicked.connect(self.show_new_window)
 
     def update_players(self, player_eliminated):
+        print(player_eliminated)
         self.player_list.remove(player_eliminated)
         self.label.setText("               ".join(self.player_list))
 
     def show_new_window(self, checked):
-        if self.w is None:
-            #self.w = game3.GameWindow()
-            self.w = AnotherWindow("               ".join(self.player_list))
+        if(len(self.player_list) == 4):
+            self.w = game2.AnotherWindow("               ".join(self.player_list))
             self.w.submitted.connect(self.update_players)
-        self.w.show()
+        elif(len(self.player_list) == 3):
+            self.w = game2.AnotherWindow("               ".join(self.player_list))
+            self.w.submitted.connect(self.update_players)
+        else:
+            self.w = game3.GameWindow()
+            self.w.submitted.connect(self.update_players)
+        self.w.showMaximized()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
