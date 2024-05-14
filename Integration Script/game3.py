@@ -24,7 +24,8 @@ kart_size = 60
 baud = 115200
 
 class Player:
-    def __init__(self, start_x_pos, start_y_pos, port, image):
+    def __init__(self, start_x_pos, start_y_pos, port, image, player_id):
+        self.player_id = player_id
         self.start_x_pos = start_x_pos
         self.start_y_pos = start_y_pos
         self.x_pos = start_x_pos
@@ -91,10 +92,11 @@ class GameWindow(QWidget):
 
     submitted = pyqtSignal(str)
 
-    def __init__(self):
+    def __init__(self, argument):
+        players = argument.split("               ")
 
-        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10", image="mario.png")
-        self.player2 = Player(start_x_pos=680, start_y_pos=150, port="COM7", image="luigi.png")
+        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10", image="mario.png", player_id=players[0])
+        self.player2 = Player(start_x_pos=680, start_y_pos=150, port="COM7", image="luigi.png", player_id=players[1])
 
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
@@ -176,18 +178,21 @@ class GameWindow(QWidget):
             if (checkpoint_check == 1):
                 player.passed = 0
                 player.lap_count += 1
-                print(player.lap_count)
+                #print(player.lap_count)
             if (player.lap_count == 3):
-                exit(0)
+                self.game_won(player.player_id)
 
 
 
         self.update()  # Trigger repaint
 
-    def closeEvent(self, event):
+    def game_won(self,player):
+        self.submitted.emit(player)
         for player in [self.player2, self.player1]:
             player.serial_reader.stop()
             player.serial_thread.join()
+        self.close()
+        
 
 def check_collided_outer(x, y):
     x_block = ((2*x - 2*outer_track_x - outer_track_width)/outer_track_width)**2

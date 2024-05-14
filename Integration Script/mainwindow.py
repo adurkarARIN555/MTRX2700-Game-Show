@@ -24,7 +24,6 @@ class MainWindow(QMainWindow):
         self.button.clicked.connect(self.show_new_window)
 
     def update_players(self, player_eliminated):
-        print(player_eliminated)
         self.player_list.remove(player_eliminated)
         self.label.setText("               ".join(self.player_list))
 
@@ -36,7 +35,7 @@ class MainWindow(QMainWindow):
             self.w = game2.AnotherWindow("               ".join(self.player_list))
             self.w.submitted.connect(self.update_players)
         else:
-            self.w = game3.GameWindow()
+            self.w = game3.GameWindow("               ".join(self.player_list))
             self.w.submitted.connect(self.update_players)
         self.w.showMaximized()
 
