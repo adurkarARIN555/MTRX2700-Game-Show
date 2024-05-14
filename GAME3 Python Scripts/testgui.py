@@ -78,11 +78,20 @@ class SerialReader(QObject):
 f_image_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "finishline.png")
 finishline_image = QImage(f_image_path)
 
+background_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "Background.png")
+background_image = QImage(background_path)
+
+inner_background_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "inner_background.png")
+inner_background_image = QImage(inner_background_path)
+
+td_inner_background_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "3d_inner_background.png")
+td_inner_background_image = QImage(td_inner_background_path)
+
 class GameWindow(QWidget):
     def __init__(self):
 
-        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10", image="mario.png")
-        self.player2 = Player(start_x_pos=680, start_y_pos=150, port="COM7", image="luigi.png")
+        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="/dev/cu.usbmodem142303", image="mario.png")
+        self.player2 = Player(start_x_pos=680, start_y_pos=150, port="/dev/cu.usbmodem142203", image="luigi.png")
 
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
@@ -100,10 +109,11 @@ class GameWindow(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
+        painter.drawImage(QRectF(0, 0, 1500, 800), background_image)
         painter.setBrush(QColor(30, 30, 0))
         painter.drawEllipse(outer_track_x, outer_track_y, outer_track_width, outer_track_height)
         painter.setBrush(QColor(255, 255, 255))
-        painter.drawEllipse(inner_track_x, inner_track_y, inner_track_width, inner_track_height)
+        #painter.drawEllipse(inner_track_x, inner_track_y, inner_track_width, inner_track_height)
 
         for player in [self.player1, self.player2]:
 
@@ -117,7 +127,9 @@ class GameWindow(QWidget):
             rotated_rect = transform_for_rect.mapRect(qrect_obj)
 
             painter.drawImage(QRectF(695, 75, 10, 145), finishline_image)
+            painter.drawImage(QRectF(inner_track_x-328, inner_track_y-198, inner_track_width+680, inner_track_height+400), inner_background_image)
             painter.drawImage(rotated_rect, transformed_kart_image)
+            painter.drawImage(QRectF(inner_track_x-335, inner_track_y-198, inner_track_width+660, inner_track_height+400), td_inner_background_image)
         
 
     @pyqtSlot(str)
