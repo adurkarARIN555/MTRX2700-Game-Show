@@ -67,6 +67,8 @@ class SerialReader(QThread):
 
         self.end_condition = False
 
+
+
     def run(self):
         start = 0
         
@@ -87,7 +89,8 @@ class SerialReader(QThread):
                     value1 = int(value[0])
                     value2 = int(value[1])
 
-                    
+                    if((self.game_num == 3) and (self.time_last == 12)):
+                        ser.close()
 
                     time_current = int(value[2])
 
@@ -128,7 +131,8 @@ class SerialReader(QThread):
 
 
 class GameWindow(QWidget):
-    def __init__(self):
+    submitted = pyqtSignal(str)
+    def __init__(self, argument):
         super().__init__()
 
         self.layout = QVBoxLayout(self)
@@ -154,7 +158,8 @@ class GameWindow(QWidget):
         }
 
         '''
-        self.players = ['P1', 'P2', 'P3', 'P4']
+        self.players = argument.split("               ")
+        self.players_permanent = self.players.copy()
 
         self.dial3 = ColorfulDial(self)
         self.dial3.setRange(0, 12)
@@ -324,15 +329,15 @@ class GameWindow(QWidget):
                 return 2, self.winning_str
                 
             if (self.serial_reader.game_num == 1):
-                self.players.remove("P1")
-                self.winning_str = "P1"
+                self.players.remove(self.players_permanent[0])
+                self.winning_str = self.players_permanent[0]
             elif (self.serial_reader.game_num == 2):
-                self.players.remove("P3")
-                self.winning_str = "P3"
+                self.players.remove(self.players_permanent[2])
+                self.winning_str = self.players_permanent[2]
             elif (self.serial_reader.game_num == 3):
-                self.final_loser = self.players[1]
-                self.winning_str = self.players[0]
-                self.players.remove(self.players[0])
+                self.final_loser = self.players_permanent[1]
+                self.winning_str = self.players_permanent[0]
+                self.players.remove(self.players_permanent[0])
                 
                 # for elem in self.players:
                 #     if ((elem == "P1") or (elem == "P3")):
@@ -350,14 +355,14 @@ class GameWindow(QWidget):
                 
         
         if (self.serial_reader.game_num == 1):
-            self.players.remove('P2')
-            self.winning_str = "P2"
+            self.players.remove(self.players_permanent[1])
+            self.winning_str = self.players_permanent[1]
         elif (self.serial_reader.game_num == 2):
-            self.players.remove("P4")
-            self.winning_str = "P4"
+            self.players.remove(self.players_permanent[3])
+            self.winning_str = self.players_permanent[3]
         elif (self.serial_reader.game_num == 3):
             self.final_loser = self.players[0]
-            self.winning_str = self.players[1]
+            self.winning_str = self.players_permanent[1]
             self.players.remove(self.players[1])
             
             # for elem in self.players:
@@ -387,11 +392,11 @@ class GameWindow(QWidget):
         P1_current = ""
         P2_current = ""
         if (self.serial_reader.game_num == 1):
-            P1_current = "P1"
-            P2_current = "P2"
+            P1_current = self.players_permanent[0]
+            P2_current = self.players_permanent[1]
         elif(self.serial_reader.game_num == 2):
-            P1_current = "P3"
-            P2_current = "P4"
+            P1_current = self.players_permanent[2]
+            P2_current = self.players_permanent[3]
         elif (self.serial_reader.game_num == 3):
             if (self.serial_reader.end_condition):
                 P1_current = self.players[0]
@@ -419,6 +424,9 @@ class GameWindow(QWidget):
             else:
                 if (self.serial_reader.game_num == 3):
                     self.time_current.setText(f"Winner {winner[1]}\n{self.final_loser} is ELIMINATED!\n")
+                    self.submitted.emit(self.final_loser)
+                    #self.serial_reader.ser.close()
+                    self.close()
                 else:
                     self.time_current.setText(f"Winner {winner[1]}")
         else:
@@ -436,7 +444,7 @@ class GameWindow(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main_win = GameWindow()
+    main_win = GameWindow("               ".join(["A","B","C","D"]))
     main_win.show()
 
     sys.exit(app.exec_())

@@ -34,13 +34,15 @@ class MainWindow(QMainWindow):
         self.lineEdit.clear()
 
     def update_players(self, player_eliminated):
-        if(len(self.player_list)>1):
+        if(player_eliminated in self.player_list):
+            print(self.player_list)
+            print(player_eliminated)
             self.player_list.remove(player_eliminated)
             self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
 
     def show_new_window(self, checked):
         if(len(self.player_list) == 4):
-            self.w = game2.AnotherWindow("               ".join(self.player_list))
+            self.w = game1.GameWindow("               ".join(self.player_list))
             self.w.submitted.connect(self.update_players)
         elif(len(self.player_list) == 3):
             self.w = game2.AnotherWindow("               ".join(self.player_list))
