@@ -186,12 +186,18 @@ class GameWindow(QWidget):
 
         self.update()  # Trigger repaint
 
-    def game_won(self,player):
-        self.submitted.emit(player)
+    def game_won(self,winner):
         for player in [self.player2, self.player1]:
             player.serial_reader.stop()
             player.serial_thread.join()
-        self.close()
+
+        for player in [self.player2, self.player1]:
+            if(player.player_id == winner):
+                continue
+            else:
+                self.submitted.emit(player.player_id)
+                self.close()
+            
         
 
 def check_collided_outer(x, y):

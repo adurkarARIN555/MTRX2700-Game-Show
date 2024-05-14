@@ -24,8 +24,9 @@ class MainWindow(QMainWindow):
         self.button.clicked.connect(self.show_new_window)
 
     def update_players(self, player_eliminated):
-        self.player_list.remove(player_eliminated)
-        self.label.setText("               ".join(self.player_list))
+        if(len(self.player_list)>1):
+            self.player_list.remove(player_eliminated)
+            self.label.setText("               ".join(self.player_list))
 
     def show_new_window(self, checked):
         if(len(self.player_list) == 4):
