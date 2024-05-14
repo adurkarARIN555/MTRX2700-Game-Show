@@ -24,11 +24,20 @@ kart_size = 60
 baud = 115200
 
 class Player:
-    def __init__(self, start_x_pos, start_y_pos, port):
+    def __init__(self, start_x_pos, start_y_pos, port, image):
         self.start_x_pos = start_x_pos
         self.start_y_pos = start_y_pos
         self.x_pos = start_x_pos
         self.y_pos = start_y_pos
+
+        self.delta_angle = 0
+        self.velocity = 0
+        self.angle = 0
+        self.steering_output = 0
+        self.passed = 0
+        self.lap_count = 0
+
+        self.image_obj = QImage(os.path.join(os.path.dirname(__file__), "GAME3 Images", image))
 
         self.serial_port = serial.Serial(port, baud)
         self.serial_reader = SerialReader(self.serial_port)
@@ -66,26 +75,17 @@ class SerialReader(QObject):
     def stop(self):
         self.running = False
 
-image_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "luigi.png")
-kart_image = QImage(image_path)
-
 f_image_path = os.path.join(os.path.dirname(__file__), "GAME3 Images", "finishline.png")
 finishline_image = QImage(f_image_path)
 
 class GameWindow(QWidget):
     def __init__(self):
 
-        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10")
+        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10", image="mario.png")
 
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
         self.setStyleSheet("background-color: white;")
-        self.delta_angle = 0
-        self.velocity = 0
-        self.angle = 0
-        self.steering_output = 0
-        self.passed = 0
-        self.lap_count = 0
         self.player1.serial_reader.data_received.connect(self.update_steering)
         self.player1.serial_thread.start()
         self.timer = QTimer(self)
@@ -100,13 +100,12 @@ class GameWindow(QWidget):
         painter.setBrush(QColor(255, 255, 255))
         painter.drawEllipse(inner_track_x, inner_track_y, inner_track_width, inner_track_height)
 
-        transformed_kart_image = kart_image.transformed(QTransform().rotate(self.steering_output*(180/np.pi) + 90))
+        transformed_kart_image = self.player1.image_obj.transformed(QTransform().rotate(self.player1.steering_output*(180/np.pi) + 90))
 
         qrect_obj = QRectF(int(self.player1.x_pos) - (kart_size/2), int(self.player1.y_pos) - (kart_size/2), kart_size, kart_size)
 
-
         center = qrect_obj.center()
-        transform_for_rect = QTransform().translate(center.x(), center.y()).rotate(self.steering_output*(180/np.pi) + 90).translate(-center.x(), -center.y())
+        transform_for_rect = QTransform().translate(center.x(), center.y()).rotate(self.player1.steering_output*(180/np.pi) + 90).translate(-center.x(), -center.y())
 
         rotated_rect = transform_for_rect.mapRect(qrect_obj)
 
@@ -118,32 +117,32 @@ class GameWindow(QWidget):
     def update_steering(self, controller_input):
         try:
             # Map the value to the position on the screen
-            self.delta_angle = float(controller_input.split(",")[0])
-            self.velocity = float(controller_input.split(",")[1])
-            if (self.velocity > 0):
-                self.angle = self.delta_angle + self.angle
-                self.steering_output = self.steering_output + self.angle / 10
+            self.player1.delta_angle = float(controller_input.split(",")[0])
+            self.player1.velocity = float(controller_input.split(",")[1])
+            if (self.player1.velocity > 0):
+                self.player1.angle = self.player1.delta_angle + self.player1.angle
+                self.player1.steering_output += self.player1.angle / 10
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 
     def update_position(self):
 
-        self.player1.x_pos = self.player1.x_pos + self.velocity * np.cos(self.steering_output)
-        self.player1.y_pos = self.player1.y_pos + self.velocity * np.sin(self.steering_output)
+        self.player1.x_pos += self.player1.velocity * np.cos(self.player1.steering_output)
+        self.player1.y_pos += self.player1.velocity * np.sin(self.player1.steering_output)
 
         if(check_collided_outer(self.player1.x_pos, self.player1.y_pos) or check_collided_inner(self.player1.x_pos, self.player1.y_pos)):
             self.player1.x_pos = self.player1.start_x_pos
             self.player1.y_pos = self.player1.start_y_pos
-            self.passed = 0
+            self.player1.passed = 0
             self.player1.serial_port.write(b'1')
         
-        checkpoint_check = checkpoint(self.player1.x_pos, self.player1.y_pos, self.passed)
+        checkpoint_check = checkpoint(self.player1.x_pos, self.player1.y_pos, self.player1.passed)
         if (checkpoint_check == 2):
-            self.passed = 1
+            self.player1.passed = 1
         if (checkpoint_check == 1):
-            self.passed = 0
-            self.lap_count += 1
-            print(self.lap_count)
+            self.player1.passed = 0
+            self.player1.lap_count += 1
+            print(self.player1.lap_count)
 
 
         self.update()  # Trigger repaint
