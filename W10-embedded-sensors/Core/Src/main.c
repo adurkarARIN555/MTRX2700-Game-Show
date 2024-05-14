@@ -73,13 +73,18 @@ void USART1_IRQHandler()
 	uint8_t string_to_send[64] = "This is a string !\r\n";
 	sprintf(string_to_send, "%0.6f,%f\r\n", 0, 0);
     SerialOutputString(string_to_send, &USART1_PORT);
-	//Receive char
-	//SerialOutputString("balls", &USART1_PORT);
 	if((USART1->ISR & USART_ISR_RXNE)){
 		velocity = 0;
 		uint8_t dummy;
 		SerialReceiveChar(&USART1_PORT, &dummy);
-
+		if(dummy == '2'){
+			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
+			*led_register = 0b00100010;
+		}
+		else if(dummy == '3'){
+			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
+			*led_register = 0b10001000;
+		}
 	}
 }
 
@@ -159,6 +164,7 @@ int main(void)
   enable_clocks();
   trigger_prescaler(1000);
   enable_interrupt_timer2();
+
   interval_mode(125, &read_and_transmit);
   /* USER CODE END 2 */
 

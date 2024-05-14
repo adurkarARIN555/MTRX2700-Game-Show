@@ -95,8 +95,10 @@ class GameWindow(QWidget):
     def __init__(self, argument):
         players = argument.split("               ")
 
-        self.player1 = Player(start_x_pos=670, start_y_pos=150, port="COM10", image="mario.png", player_id=players[0])
-        self.player2 = Player(start_x_pos=680, start_y_pos=150, port="COM7", image="luigi.png", player_id=players[1])
+        self.player1 = Player(start_x_pos=670, start_y_pos=120, port="COM10", image="mario.png", player_id=players[0])
+        self.player1.serial_port.write(b'2')
+        self.player2 = Player(start_x_pos=630, start_y_pos=180, port="COM7", image="luigi.png", player_id=players[1])
+        self.player2.serial_port.write(b'3')
 
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
