@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit
 
 
 import game3, game2
@@ -12,10 +12,14 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Main Window Example")
 
-        self.player_list = ["Player 1", "Player 2", "Player 3", "Player 4"]
+        self.player_list = []
+
+        self.lineEdit = QLineEdit(self)
+        self.lineEdit.setGeometry(10, 10, 200, 30)
+        self.lineEdit.returnPressed.connect(self.player_name_entered)
 
         # Label
-        self.label = QLabel("               ".join(self.player_list), self)
+        self.label = QLabel("players remaining:\n\r"+"               ".join(self.player_list), self)
         self.label.setGeometry(50, 50, 2000, 30)
 
         # Button
@@ -23,10 +27,16 @@ class MainWindow(QMainWindow):
         self.button.setGeometry(100, 100, 100, 30)
         self.button.clicked.connect(self.show_new_window)
 
+    def player_name_entered(self):
+        if(len(self.player_list)<4):
+            self.player_list.append(self.lineEdit.text())
+            self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
+        self.lineEdit.clear()
+
     def update_players(self, player_eliminated):
         if(len(self.player_list)>1):
             self.player_list.remove(player_eliminated)
-            self.label.setText("               ".join(self.player_list))
+            self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
 
     def show_new_window(self, checked):
         if(len(self.player_list) == 4):
