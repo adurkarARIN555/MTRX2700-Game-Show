@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit
 
 
-import game3, game2
+import game3, game2, game1
 import sys
 
 

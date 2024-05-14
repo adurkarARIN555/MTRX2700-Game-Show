@@ -169,7 +169,7 @@ class MainWindow(QMainWindow):
         self.time_and_dial = QVBoxLayout()
         # worked
 
-        pixmap = QPixmap("/Users/Admin/Documents/MTRX2700/MTRX2700A3/resources/ThePriceIsRight.png")
+        pixmap = QPixmap("resources/ThePriceIsRight.png")
         scaled_pixmap = pixmap.scaled(5000,5000)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setPixmap(pixmap)
@@ -294,7 +294,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(self.central_widget)
 
-        self.start_serial_reading('/dev/tty.usbmodem2103')
+        self.start_serial_reading('COM9')
 
     def calculate_winner(self):
         current_price = 0
@@ -403,12 +403,12 @@ class MainWindow(QMainWindow):
             self.pot_val_1_label.setText(f"{P1_current}\n$ {str(new_value2)}")
         # https://www.facebook.com/marketplace/item/1553942341838619/?ref=search&referral_code=null&referral_story_type=post
         if (self.serial_reader.game_num == 1):
-            self.image_label.setPixmap(QPixmap("/Users/Admin/Documents/MTRX2700/MTRX2700A3/resources/chair.png"))
+            self.image_label.setPixmap(QPixmap("resources/chair.png"))
         elif (self.serial_reader.game_num == 2):
-            self.image_label.setPixmap(QPixmap("/Users/Admin/Documents/MTRX2700/MTRX2700A3/resources/art.png"))
+            self.image_label.setPixmap(QPixmap("resources/art.png"))
             self.no_verdict = False
         elif (self.serial_reader.game_num == 3):
-            self.image_label.setPixmap(QPixmap("/Users/Admin/Documents/MTRX2700/MTRX2700A3/resources/room.png"))
+            self.image_label.setPixmap(QPixmap("resources/room.png"))
 
         if (self.serial_reader.time_last == 12):
             winner = self.calculate_winner()
