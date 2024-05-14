@@ -174,6 +174,9 @@ class GameWindow(QWidget):
                 player.passed = 0
                 player.lap_count += 1
                 print(player.lap_count)
+            if (player.lap_count == 3):
+                exit(0)
+
 
 
         self.update()  # Trigger repaint
