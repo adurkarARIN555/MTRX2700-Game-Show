@@ -40,7 +40,6 @@ void timer_initialise(uint16_t interval, void (*callback_function)()) {
 	// enable counter
 	TIM2->CR1 |= TIM_CR1_CEN;
 
-	// set the prescaler to 5999, slower than the default clock 6000 times, Clock speed 48MHz
 	TIM2->PSC = PRESCALER; // 125 microseconds = 0.125 milliseconds per count
 
 	// set the auto reload according to the prescaler
@@ -62,7 +61,7 @@ void timer_initialise(uint16_t interval, void (*callback_function)()) {
 
 	continuous_callback_function = callback_function;
 
-	enable_interrupt(TIM2_IRQn, 3);
+	enable_interrupt(TIM2_IRQn, 1);
 
 }
 

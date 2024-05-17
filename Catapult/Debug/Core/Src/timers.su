@@ -3,7 +3,7 @@
 ../Core/Src/timers.c:13:6:enable_interrupt	16	static,ignoring_inline_asm
 ../Core/Src/timers.c:26:6:TIM2_IRQHandler	8	static
 ../Core/Src/timers.c:35:6:timer_initialise	16	static
-../Core/Src/timers.c:69:6:TIM3_IRQHandler	8	static
-../Core/Src/timers.c:87:6:trigger_oneshot	16	static
-../Core/Src/timers.c:121:10:get_time	4	static
-../Core/Src/timers.c:127:6:set_time	16	static
+../Core/Src/timers.c:68:6:TIM3_IRQHandler	8	static
+../Core/Src/timers.c:86:6:trigger_oneshot	16	static
+../Core/Src/timers.c:120:10:get_time	4	static
+../Core/Src/timers.c:126:6:set_time	16	static

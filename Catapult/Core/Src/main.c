@@ -25,6 +25,8 @@
 #include <stdlib.h>
 #include "digital_io.h"
 #include "timers.h"
+#include "serial.h"
+
 
 /* USER CODE END Includes */
 
@@ -39,7 +41,21 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
-
+#define RELEASED 1500
+#define LOCKED 2500
+#define SPRING_UNLOADED 500
+#define ERROR_LED 0b00000010
+// Custom macro for testing and printing results to USART
+#define TEST_ASSERT(expression, success_message, fail_message) \
+    do { \
+        if (expression) { \
+            SerialOutputString((uint8_t*)(success_message), &USART1_PORT); \
+        } else { \
+            SerialOutputString((uint8_t*)(fail_message), &USART1_PORT); \
+            fail_flag = 1; \
+        } \
+    } while (0)
+#define TEST_CODE
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
@@ -52,8 +68,12 @@ TIM_HandleTypeDef htim2;
 PCD_HandleTypeDef hpcd_USB_FS;
 
 /* USER CODE BEGIN PV */
-uint32_t user_flag = 0;
-uint32_t tim3_flag = 0;
+uint32_t user_flag = 0; //flag to signify button has been pressed by user
+uint32_t tim3_flag = 0; //flag to signify timer end
+uint32_t fail_flag = 0; //flag to signify test case fail
+
+//Array of PWM values (determines loading angle) for different number of LEDs on
+uint32_t shoot_strength[] = {1500, 1625, 1750, 1875, 2000, 2125, 2250, 2375, 2500};
 
 /* USER CODE END PV */
 
@@ -73,7 +93,41 @@ void oneshot_finished();
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+// Function to be tested
+int add(int a, int b) {
+    return a + b;
+}
 
+#ifdef TEST_CODE
+void run_tests() {
+	SerialInitialise(BAUD_115200, &USART1_PORT, NULL);
+
+	// Run test cases
+	//tests the countLED function
+	TEST_ASSERT(countLED(0b11111000) == 5, "Test case 1 passed\r\n", "Test case 1 failed\r\n");
+	TEST_ASSERT(countLED(0b00001111) == 4, "Test case 2 passed\r\n", "Test case 2 failed\r\n");
+	//Integrated testing of the PWM value produced for LEDs on
+	TEST_ASSERT(shoot_strength[countLED(0b11111100) == 2250], "Test case 3 passed\r\n", "Test case 3 failed\r\n");
+	//tests the set_LED, get_LED and led_increase functions
+	set_LED(0b00000000);
+	led_increase();
+	TEST_ASSERT(get_LED() == 0b00000001, "Test case 4 passed\r\n", "Test case 4 failed\r\n");
+	set_LED(0b01111111);
+	led_increase();
+	led_increase();
+	led_increase();
+	TEST_ASSERT(get_LED() == 0b00111111, "Test case 5 passed\r\n", "Test case 5 failed\r\n");
+
+
+	//abort program if any test failed
+	if (fail_flag == 1)
+	{
+		SerialOutputString((uint8_t*)("Exit program\r\n"), &USART1_PORT);
+		abort();
+	}
+	SerialOutputString((uint8_t*)("All test cases passed\r\n"), &USART1_PORT);
+}
+#endif
 /* USER CODE END 0 */
 
 /**
@@ -83,7 +137,16 @@ void oneshot_finished();
 int main(void)
 {
   /* USER CODE BEGIN 1 */
+  enable_clocks(); //enabling peripheral clocks
+  initialise_board(); //enable GPIO ports
+	#ifdef TEST_CODE
+  	run_tests();
+	#endif
+  timer_initialise(5, &led_increase); //start the LED cycling
+  enable_button_interrupt(&disable_user); //enable the user button interrupt
 
+  //nothing to be done while button is not pushed
+  while (user_flag == 0) {}
 
   /* USER CODE END 1 */
 
@@ -93,11 +156,6 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
-  enable_clocks();
-  initialise_board();
-  timer_initialise(20, &led_increase);
-  enable_button_interrupt(&disable_user);
 
   /* USER CODE END Init */
 
@@ -110,9 +168,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   //MX_GPIO_Init();
-  MX_I2C1_Init();
-  MX_SPI1_Init();
-  MX_USB_PCD_Init();
+  //MX_I2C1_Init();
+  //MX_SPI1_Init();
+  //MX_USB_PCD_Init();
   MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
 
@@ -121,44 +179,53 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  while (user_flag == 0) {}
+  //get the number of LEDs on after user has pushed button
+  uint32_t count_led = countLED(get_LED());
 
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
 
-  //CCR1 is for release mechanism 1500-2500 //PA15
-  //CCR2 is for spring 2500-500 //PA1
-  TIM2->CCR1 = 2500; //release mechanism is open
-  TIM2->CCR2 = 1000; //set to non loaded spring %%%%%%%%%
+  //CCR1 is for release mechanism //PA15
+  //CCR2 is for spring //PA1
 
+  TIM2->CCR1 = RELEASED; //release mechanism is open
+  TIM2->CCR2 = SPRING_UNLOADED; //set to non loaded spring
+
+  //2s delay
+  trigger_oneshot(2000, &oneshot_finished);
+  while (tim3_flag == 0) {}
+  tim3_flag = 0; //reset timer flag
+
+  TIM2->CCR1 = LOCKED; //release mechanism is closed
+
+  //2s delay
   trigger_oneshot(2000, &oneshot_finished);
   while (tim3_flag == 0) {}
   tim3_flag = 0;
 
-  TIM2->CCR1 = 1500; //release mechanism is closed
+  //load the spring
+  TIM2->CCR2 = shoot_strength[count_led];
 
+  //2.5s delay
+  trigger_oneshot(2500, &oneshot_finished);
+  while (tim3_flag == 0) {}
+  tim3_flag = 0;
+
+  TIM2->CCR1 = RELEASED; //release mechanism is opened
+
+  //2s delay
   trigger_oneshot(2000, &oneshot_finished);
   while (tim3_flag == 0) {}
   tim3_flag = 0;
 
-  TIM2->CCR2 = 2500; //load spring set value %%%%%%%%%%
+  TIM2->CCR2 = SPRING_UNLOADED; //set to non loaded spring
 
+  //2s delay
   trigger_oneshot(2000, &oneshot_finished);
   while (tim3_flag == 0) {}
   tim3_flag = 0;
 
-  TIM2->CCR1 = 2500; //release mechanism is opened
-
-  trigger_oneshot(2000, &oneshot_finished);
-  while (tim3_flag == 0) {}
-  tim3_flag = 0;
-
-  TIM2->CCR2 = 1000; //set to non loaded spring %%%%%%%%%
-
-
-
-
-  for (;;) {}
+  NVIC_SystemReset(); //reset the system for new player
 
   /* USER CODE END 3 */
 }
@@ -444,7 +511,6 @@ void oneshot_finished()
 	tim3_flag = 1;
 }
 
-
 /* USER CODE END 4 */
 
 /**
@@ -458,6 +524,7 @@ void Error_Handler(void)
   __disable_irq();
   while (1)
   {
+	  set_LED(ERROR_LED);
   }
   /* USER CODE END Error_Handler_Debug */
 }

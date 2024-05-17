@@ -9,6 +9,7 @@
 #define PATTERN_2 0b10101010
 #define ALL_ON 0b11111111
 #define ERROR_LED 0b00000010
+#define ALL_OFF 0b00000000
 
 #pragma GCC diagnostic ignored "-Wpointer-sign"
 
@@ -101,25 +102,46 @@ uint8_t get_LED()
 	return binaryNumber;
 }
 
+//increases the number of LEDs on and then decreases
 void led_increase()
 {
 	if (counter_flag == 0)
 	{
+		//counter flag 0 means turning on LEDs in clockwise direction
 		set_LED(0b00000001 | (get_LED() << 1));
-		if (get_LED() == 0b11111111)
+		if (get_LED() == ALL_ON)
 		{
 			counter_flag = 1;
 		}
 	}
 	else if (counter_flag == 1)
 	{
+		//counter flag 1 means turning off LEDs in anti-clockwise direction
 		set_LED(get_LED() >> 1);
-		if (get_LED() == 0b00000000)
+		if (get_LED() == ALL_OFF)
 		{
 			counter_flag = 0;
 		}
 	}
 
+}
+
+uint32_t countLED(uint8_t N)
+{
+    // Initialise count variables
+    uint32_t count1 = 0;
+
+    // Iterate through all the bits
+    while (N > 0)
+    {
+        // If current bit is 1
+        if (N & 1)
+        {
+            count1++;
+        }
+        N = N >> 1;
+    }
+    return count1;
 }
 
 

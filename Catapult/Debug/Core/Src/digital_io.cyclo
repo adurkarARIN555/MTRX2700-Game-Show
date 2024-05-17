@@ -1,9 +1,10 @@
 ../Drivers/CMSIS/Include/core_cm4.h:1688:22:__NVIC_EnableIRQ	2
 ../Drivers/CMSIS/Include/core_cm4.h:1816:22:__NVIC_SetPriority	2
-../Core/Src/digital_io.c:19:6:enable_clocks	1
-../Core/Src/digital_io.c:30:6:initialise_board	1
-../Core/Src/digital_io.c:39:6:EXTI0_IRQHandler	2
-../Core/Src/digital_io.c:50:6:enable_button_interrupt	1
-../Core/Src/digital_io.c:81:6:set_LED	1
-../Core/Src/digital_io.c:97:9:get_LED	1
-../Core/Src/digital_io.c:104:6:led_increase	5
+../Core/Src/digital_io.c:20:6:enable_clocks	1
+../Core/Src/digital_io.c:31:6:initialise_board	1
+../Core/Src/digital_io.c:40:6:EXTI0_IRQHandler	2
+../Core/Src/digital_io.c:51:6:enable_button_interrupt	1
+../Core/Src/digital_io.c:82:6:set_LED	1
+../Core/Src/digital_io.c:98:9:get_LED	1
+../Core/Src/digital_io.c:106:6:led_increase	5
+../Core/Src/digital_io.c:129:10:countLED	3
