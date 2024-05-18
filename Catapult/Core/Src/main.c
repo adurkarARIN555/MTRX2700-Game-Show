@@ -93,11 +93,6 @@ void oneshot_finished();
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-// Function to be tested
-int add(int a, int b) {
-    return a + b;
-}
-
 #ifdef TEST_CODE
 void run_tests() {
 	SerialInitialise(BAUD_115200, &USART1_PORT, NULL);
