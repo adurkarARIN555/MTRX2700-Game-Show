@@ -11,10 +11,10 @@ class WebcamApp(QWidget):
         super().__init__()
         self.player_name = argument
         self.initUI()
-        self.cap = cv2.VideoCapture(0)  # Open the default camera
+        self.cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)  # Open the default camera
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update_frame)
-        self.timer.start(30)  # Update the frame every 30 ms
+        self.timer.start(100)  # Update the frame every 30 ms
 
     def initUI(self):
         self.image_label = QLabel(self)
@@ -51,6 +51,7 @@ class WebcamApp(QWidget):
             print('Photo captured and saved as captured_photo.png')
 
             self.submitted.emit()
+            self.cap.release()
             self.close()
 
     # def closeEvent(self, event):

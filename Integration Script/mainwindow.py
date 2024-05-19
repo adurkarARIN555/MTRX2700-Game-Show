@@ -49,14 +49,45 @@ class MainWindow(QMainWindow):
         self.lineEdit.setGeometry(10, 10, 200, 30)
         self.lineEdit.returnPressed.connect(self.player_name_entered)
 
-        # Labels
-        self.label = QLabel("players remaining:\n\r"+"               ".join(self.player_list), self)
-        self.label.setGeometry(50, 50, 200, 200)
-        self.layout.addWidget(self.label)
+        self.addtextabove = QLabel("Players Remaining:", self)
+        self.addtextabove.setGeometry(50, 40, 200, 200)
+        self.layout.addWidget(self.addtextabove)
+
+
+        # Labels for Player Text
+        player1name = QLabel(" ", self)
+        player1name.setGeometry(50, 60, 200, 200)
+        self.layout.addWidget(player1name)
+
+        player2name = QLabel(" ", self)
+        player2name.setGeometry(250, 60, 200, 200)
+        self.layout.addWidget(player2name)
+
+        player3name = QLabel(" ", self)
+        player3name.setGeometry(450, 60, 200, 200)
+        self.layout.addWidget(player3name)
+
+        player4name = QLabel(" ", self)
+        player4name.setGeometry(650, 60, 200, 200)
+        self.layout.addWidget(player4name)
+
+        self.player_name_labels = [player1name, player2name, player3name, player4name]
 
         #Labels for Player Images
-        self.player1 = QLabel(self) # label for image
-        self.player1.setGeometry(50, 120, 200, 200)
+        player1 = QLabel(self) # label for image
+        player1.setGeometry(50, 120, 200, 220)
+
+        player2 = QLabel(self) # label for image
+        player2.setGeometry(250, 120, 200, 220)
+
+        player3 = QLabel(self) # label for image
+        player3.setGeometry(450, 120, 200, 220)
+
+        player4 = QLabel(self) # label for image
+        player4.setGeometry(650, 120, 200, 220)
+
+        self.player_image_labels = [player1, player2, player3, player4]
+
 
         # Button
         self.button = QPushButton("Start Next Game", self)
@@ -67,7 +98,7 @@ class MainWindow(QMainWindow):
         if(len(self.player_list)<4):
             player_name_current = self.lineEdit.text()
             self.player_list.append(player_name_current)
-            self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
+            self.player_name_labels[len(self.player_list)-1].setText(player_name_current)
         self.lineEdit.clear()
 
         self.w = webcam.WebcamApp(player_name_current)
@@ -94,9 +125,12 @@ class MainWindow(QMainWindow):
 
         pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[-1]+".png"))
         scaled_pixmap = pixmap.scaled(150, 100)
-        self.player1.setPixmap(scaled_pixmap)
+
+
+
+        self.player_image_labels[len(self.player_list)-1].setPixmap(scaled_pixmap)
         #self.label.setPixmap(scaled_pixmap)
-        self.layout.addWidget(self.player1)
+        self.layout.addWidget(self.player_image_labels[len(self.player_list)-1])
 
         #self.label.move(0, 190)
 
