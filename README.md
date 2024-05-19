@@ -30,7 +30,9 @@
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
 - The dial gui widget represents the current time that TIM2 is counting.
-- 
+### Individual Modules:
+- ```Timer```: The timer module sends over a serial a continuous timer signal that is only restarted once the STM reset button is pressed.
+- ```HAL PWM```: The HAL_PWM 
 ## Catapult Toss:
 ### Requirement Specification:
 
