@@ -27,6 +27,7 @@
 
 #include "serial.h"
 #include "timer.h"
+#include <math.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
