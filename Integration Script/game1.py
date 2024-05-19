@@ -446,6 +446,10 @@ class GameWindow(QWidget):
         self.serial_reader.start()
 
 
+if hasattr(Qt, 'AA_EnableHighDpiScaling'):
+    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
+if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
+    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
