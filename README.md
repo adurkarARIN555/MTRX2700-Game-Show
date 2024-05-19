@@ -101,13 +101,30 @@
 
 ## Mario Kart:
 ### Requirement Specification: 
-- Mario Kart was designed with the desire to replicate the mechanics of Mario Kart Wii.
+- A two-player kart racing game was designed with the desire to replicate the mechanics of Mario Kart Wii.
 - Two STM32F3 microcontrollers are to be used, connected to a single computer through two different COM ports.
-- Rotation of the microcontroller should turn the steering of the vehicle, and pressing and releasing the user button should modulate the velocity of the kart.
+- Rotation of the microcontroller should turn the steering of the vehicle, and pressing or releasing the user button should modulate the velocity of the kart.
 - The first player to complete three laps of the course will survive, with the other player being eliminated.
+
 ### System Design:
-### Detailed Design:  
+![GAME3-basic drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/cdd5f18a-5f7a-4e5b-815c-9c08115ca1b0)
+
+A very high-level functional block diagram shows the design of the current system. The gyroscope on the microcontroller measures the change in rotation of the microcontroller. This is used to rotate the steering axis of the kart. The blue USER button on the microcontroller modulates the velocity of the kart, working by accelerating the kart up to a maximal threshold when the button is pressed, and decelerating the kart down to a minimal threshold when the button is released. These inputs are given to the computer from the COM ports where a python script is displaying a GUI. The gyroscope values are sent back to the microntroller via USART1 velocity and position values are calculated on the microcontroller and then updated on the GUI. Where the position value is calculated to be outside of the bounds of the track, the kart is respawned back to the start of the track. A checkpoint system was developed to ensure no player can continuously drive backwards and forwards to cheat the lap count system. Once the checkpoint is passed (located at the middle of the track (in terms of distance)), the lap count is able to be incremented once the finish line is passed. Where the player has passed the checkpoint, but then crashes their kart (position calculated outside of the track bounds), their checkpoint flag is taken as no passed to ensure no player can pass the checkpoint, then intentionally crash to respawn at the finish line and then have their lap increased. 
+
+### Detailed Design: 
+![GAME3-detailed drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/e3b4c3ad-121e-4958-a579-23dc26791b86)
+
 ### Instructions for use:  
+1. Connect both STM32F3 microcontrollers to the single computer.
+2. Hold the microcontroller level before the race starts (this will ensure the steering is referenced from a comfortable position).
+3. Look at the LEDs on the microcontroller, the green LEDs indicates that microcontroller is Luigi and will control the green kart, similarly, is the LEDs are red, that indicated that micrcontroller is Mario and will control the red kart.
+4. Hold down the blue USER button to accelerate the kart, and let go to decelerate.
+5. Tilt the micrcontroller along the z-axis, the same way you would rotate a car's steering wheel, to rotate the steering angle of the kart.
+6. The game will finish once the one of the players completes three laps.
+
 ### Testing:
+run the tests module
+(explain what each of these will do)
+
 ### Performance:
 
