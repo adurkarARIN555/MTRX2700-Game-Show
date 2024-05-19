@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QGridLayout
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import QPixmap, QImage
 #from PyQt5.QtCore import QRectF
 
 
@@ -135,13 +135,25 @@ class MainWindow(QMainWindow):
                     break
                 player_index+=1
 
+            cross = self.player_cross_labels.pop(player_index) 
+            playerim = self.player_image_labels.pop(player_index)
+            self.player_name_labels.pop(player_index)     
+
+            pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[player_index]+".png"))
+            scaled_pixmap = pixmap.scaled(image_width, image_height)
+            Q_image = QPixmap.toImage(scaled_pixmap)
+            grayscale = Q_image.convertToFormat(QImage.Format_Grayscale8)
+            grey_pixmap = QPixmap.fromImage(grayscale)
+            playerim.setPixmap(grey_pixmap)
+
+
             self.player_list.remove(player_eliminated)
 
             pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Integrated Images", "cross.png"))
             scaled_pixmap = pixmap.scaled(image_width, image_height)
 
-            self.player_cross_labels[player_index].setPixmap(scaled_pixmap)
-            self.layout.addWidget(self.player_cross_labels[player_index])
+            cross.setPixmap(scaled_pixmap)
+            self.layout.addWidget(cross)
             
 
     def update_images(self):
