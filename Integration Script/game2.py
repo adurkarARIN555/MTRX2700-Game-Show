@@ -9,7 +9,7 @@ class AnotherWindow(QWidget):
 
     submitted = qtc.pyqtSignal(str)
 
-    def __init__(self, argument):
+    def __init__(self, argument, width, height):
         super().__init__()
         players = argument.split("               ")
 

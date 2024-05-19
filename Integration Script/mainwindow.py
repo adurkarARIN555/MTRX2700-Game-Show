@@ -31,6 +31,12 @@ def clear_folder(folder_path):
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+
+        desktop = QApplication.desktop()
+        screen_geom = desktop.screenGeometry()
+        self.widthscreen = screen_geom.width()
+        self.heightscreen = screen_geom.height()
+
         self.w = None  # No external window yet.
 
         self.setWindowTitle("Main Window Example")
@@ -98,13 +104,13 @@ class MainWindow(QMainWindow):
 
     def show_new_window(self, checked):
         if(len(self.player_list) == 4):
-            self.w = game1.GameWindow("               ".join(self.player_list))
+            self.w = game1.GameWindow("               ".join(self.player_list), self.widthscreen, self.heightscreen)
             self.w.submitted.connect(self.update_players)
         elif(len(self.player_list) == 3):
-            self.w = game2.AnotherWindow("               ".join(self.player_list))
+            self.w = game2.AnotherWindow("               ".join(self.player_list), self.widthscreen, self.heightscreen)
             self.w.submitted.connect(self.update_players)
         else:
-            self.w = game3.GameWindow("               ".join(self.player_list))
+            self.w = game3.GameWindow("               ".join(self.player_list), self.widthscreen, self.heightscreen)
             self.w.submitted.connect(self.update_players)
         self.w.showMaximized()
 
