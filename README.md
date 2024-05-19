@@ -2,44 +2,85 @@
 # Major Project - Squid Game
 
 ## Role allocations:
-**Guess the price:** Cameron Dimovski
-
-**Catapult toss:** Arin Adurkar, Eashan Garg
-
-**Mario kart racing:** Thomas Cook, James Cook
-
+|GAME|Person(s) responsible
+|------------|------------------------
+|Guess the Price|Cameron Dimovski
+|Catapult Toss|Eashan Garg & Arin Adurkar
+|Mario Kart Racing|Thomas Cook & James Cook
 ## Guess the price
-**Requirement Specification:**  
-**System Design:**  
-**Detailed Design:**  
-**Instructions for use:**  
-**Testing:**  
-**Performance:**
+### Requirement Specification: 
+### System Design:
+### Detailed Design: 
+### Instructions for use:  
+### Testing:
+### Performance:
 ## Catapult Toss:
-**Requirement Specification:** 
+### Requirement Specification:
 
 - A game power meter will run back and forth until the user stops it
 - Indication by the power meter will determine how far a projectile is tossed by the catapult
 - Whoever makes the projecile travel the least distance is eliminated
   
-**System Design:**
+### System Design:
   
 - In order to simulate the power meter, the STM board LEDs will cycle back and forth at about 5ms per change.
 - When the user button is pressed, the LED pattern stops and the particular number of LEDs that are ON determines the shooting strength
 - Shooting strength determines how much the launching springs are pulled by the servo and in turn the projectile will travel a greater distance for more LEDs ON and a smaller distance for less LEDs ON
   
-**Detailed Design:**
+### Detailed Design:
 
-The following modules were used in this game:
+**Components**
+-	Mechanical catapult consisting of springs, bolts, hinges, screws and eyebolts, wood and corflute
+-	25kg 6.0-7.4V Servo, HF-S2225MG
+-	9g 5V Micro servo, SG90
+  
+**Individual Modules**
+-	```Digital I/O```: The functions ```enable_clocks```, ```initialise_board``` and ```enable_button_interrupts``` in this module are used to enable the STM board LEDs and the user button. ```led_increase``` turns on/off consecutive LEDs each time the function is called. It is used in the power meter simulation. ```countLED``` counts the number of LEDs ON in decimal given the current state in binary using the function ```get_LED```. 
+-	```Timers```: This module contains the interrupt handlers for ```TIM2``` and ```TIM3``` as well as the function ```enable_interrupt``` to enable timer interrupts. The function ```timer_initialise``` runs a continuous timer given the time in milliseconds and a void callback function. The function ```trigger_oneshot``` runs a oneshot timer given the time in milliseconds and a void callback function.
+-	```HAL PWM```: This module is configured to rotate the servo motors to a certain angle using ```TIM2```. The control register ```CCR1``` controls the release mechanism servo while ```CCR2``` controls the spring loading servo
 
-**Instructions for use:**  
-**Testing:**  
-**Performance:**
+**Integrated Main function**
+-	First, the required peripherals are initialised in order to use the LEDs and user button
+-	Then the continuous timer is run with ```led_increase``` as a callback in order to simulate the power meter
+-	Button interrupts are enabled and the program waits for a button press
+-	Once the button is pressed, the continuous timer interrupt and button interrupt are disabled
+-	The number of LEDs ON are counted
+-	HAL is initialised and ```TIM2``` is configured for PWM output
+-	The initial position of the servos is loaded to the control registers
+-	After a delay of 2s, the release mechanism is locked
+-	After another 2s, the load springs are pulled
+-	After 2.5s, the release mechanism is opened and the projectile is shot
+-	After 2s, the spring returns to its original position and the program is reset for a new player
+
+
+### Instructions for use:
+- Press the Blue User Button on the STM32.
+- Observe the LED movement and try to get maximum LEDs ON. (More LED’s, more strength).
+- The load will be shot with power corresponding to the number of switched-ON LEDs.
+- After the load lands at a certain distance, we the judges measure the distance and the participant having the load shot furthest is promoted to the final level of the game.
+- Wait for the game to reset and play again.
+
+### Testing:
+- The function ```run_tests``` initializes serial communication and runs a number of tests checking the working of various functions related to LEDs, servo motors strength, PWM.
+- Test Case 1: Verifies that ```countLED``` function correctly counts the number of ON LEDs in the binary representation checking if the value equals 5. If not correctly executed, the test case fails.
+- Test Case 2: Verifies that the  ```countLED```  function counts that the number of LEDs ON are 4.
+- Test Case 3: Checks that the strength (angle) of shooting the load from the catapult is 2250 when 6 LEDs are ON.
+- Test Case 4 and 5: Are responsible to check the LED functions. Firstly, the LEDs are set to all zeros (all OFF), then, there is an increment in the number of LEDs by 1 and the TEST_ASSERT functions tests if the new state is ‘0b01111111’. Test Case 5 also does the same verification but with different number of LEDs.
+- In case any test case fails, a message is sent to the Serial port (USART1) and the program “exits”. If all tests pass, “All test cases passed” is output on the Serial port.
+
+
+### Performance:
+- The number of LEDs that are ON correspond to the angle the servo motor will turn.
+- Higher angle means that the spring in the catapult is stretched more and creates a strong force for the load to be shot with a greater speed.
+- The benchtop power supply is used to power the big servo motor that runs on 6 to 7.4V and is responsible to stretch the springs to the particular angles.
+- The small servo motor is run on 5V and is given power from a power supply by connecting it through a breadboard.
+- The 3 springs are a perfect fit for the load to be shot to a long distance. We had also tried the system with 4 springs, but the required force was not generated as the spring constant was too small. We also tried with 2 springs, but the servo struggled a little to handle the load.
+
 ## Mario Kart Racing:
-**Requirement Specification:**  
-**System Design:**  
-**Detailed Design:**  
-**Instructions for use:**  
-**Testing:**  
-**Performance:**
+### Requirement Specification: 
+### System Design:
+### Detailed Design:  
+### Instructions for use:  
+### Testing:
+### Performance:
 
