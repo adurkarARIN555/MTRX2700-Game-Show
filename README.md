@@ -20,7 +20,8 @@
 - A game power meter will run back and forth until the user stops it
 - Indication by the power meter will determine how far a projectile is tossed by the catapult
 - Whoever makes the projecile travel the least distance is eliminated
-  
+  ![SBD](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/d6ac0d88-d144-49fb-a772-a72be406432f)
+
 ### System Design:
   
 - In order to simulate the power meter, the STM board LEDs will cycle back and forth at about 5ms per change.
