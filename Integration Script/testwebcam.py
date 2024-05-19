@@ -5,8 +5,9 @@ from PyQt5.QtGui import QImage, QPixmap
 from PyQt5.QtCore import QTimer
 
 class WebcamApp(QWidget):
-    def __init__(self):
+    def __init__(self, argument):
         super().__init__()
+        self.player_name = argument
         self.initUI()
         self.cap = cv2.VideoCapture(0)  # Open the default camera
         self.timer = QTimer(self)
@@ -44,12 +45,14 @@ class WebcamApp(QWidget):
             qimg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
             pixmap = QPixmap.fromImage(qimg)
             self.image_label.setPixmap(pixmap)
-            cv2.imwrite('captured_photo.png', cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+            cv2.imwrite(self.player_name+".png", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
             print('Photo captured and saved as captured_photo.png')
 
-    def closeEvent(self, event):
-        self.cap.release()
-        event.accept()
+            self.close()
+
+    # def closeEvent(self, event):
+    #     self.cap.release()
+    #     event.accept()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
