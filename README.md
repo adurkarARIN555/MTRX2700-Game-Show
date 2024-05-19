@@ -4,12 +4,12 @@
 ## Role allocations:
 |GAME|Person(s) responsible
 |------------|------------------------
-|Guess the Price|Cameron Dimovski
+|The Price Is Right|Cameron Dimovski
 |Catapult Toss|Eashan Garg & Arin Adurkar
-|Mario Kart Racing|Thomas Cook & James Cook
-## Guess the price
+|Mario Kart|Thomas Cook & James Cook
+## The Price Is Right
 ### Requirement Specification: 
-- The game "the price is right" overall is supposed to function like the TV show. The game is a simplified online version of the game. The user will need an STM32 microcontroller as well as importing the standard definitions folder for the STM32 "stm32f303xc.h". To use the GUI the required libraries QtCore, QtWidgets and QtGui from PyQt5.
+- The game "The Price Is Right" overall is supposed to function like the TV show. The game is a simplified online version of the game. The user will need an STM32 microcontroller as well as importing the standard definitions folder for the STM32 "stm32f303xc.h". To use the GUI the required libraries QtCore, QtWidgets and QtGui from PyQt5.
 - Slider Control: The program allows the two users to control PyQt widget sliders through sliding their fingers over the potentiometer. The current value should be displayed to the screen.
 - Timer Control: The program implements a timer that the game players must complete their choice within to play the game.
 - GUI Display: The GUI displays 4 main configurations of the window to simulate the price is right game. The first part is the base loading screen. The following three configurations of the main window are the games 1-3 that are changed based on what the user has provided.
@@ -99,8 +99,12 @@
 ![Figure_1](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160400819/e9c8b9b3-b888-45ce-a14f-7a35ae12f6c6)
 
 
-## Mario Kart Racing:
+## Mario Kart:
 ### Requirement Specification: 
+- Mario Kart was designed with the desire to replicate the mechanics of Mario Kart Wii.
+- Two STM32F3 microcontrollers are to be used, connected to a single computer through two different COM ports.
+- Rotation of the microcontroller should turn the steering of the vehicle, and pressing and releasing the user button should modulate the velocity of the kart.
+- The first player to complete three laps of the course will survive, with the other player being eliminated.
 ### System Design:
 ### Detailed Design:  
 ### Instructions for use:  
