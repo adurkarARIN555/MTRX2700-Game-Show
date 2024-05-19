@@ -123,11 +123,8 @@ class MainWindow(QMainWindow):
         self.w.submitted.connect(self.update_images)
         self.w.showMaximized()
 
-        #User Images/self.player_name_current.png
-        #print("Hello")
-
     def update_players(self, player_eliminated):
-        if(player_eliminated in self.player_list):
+        if((player_eliminated in self.player_list) and (len(self.player_list) != 1)):
             
             player_index = 0
             for player in self.player_list:
