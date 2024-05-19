@@ -37,7 +37,9 @@
 **Individual Modules**
 -	```Digital I/O```: The functions ```enable_clocks```, ```initialise_board``` and ```enable_button_interrupts``` in this module are used to enable the STM board LEDs and the user button. ```led_increase``` turns on/off consecutive LEDs each time the function is called. It is used in the power meter simulation. ```countLED``` counts the number of LEDs ON in decimal given the current state in binary using the function ```get_LED```. 
 -	```Timers```: This module contains the interrupt handlers for ```TIM2``` and ```TIM3``` as well as the function ```enable_interrupt``` to enable timer interrupts. The function ```timer_initialise``` runs a continuous timer given the time in milliseconds and a void callback function. The function ```trigger_oneshot``` runs a oneshot timer given the time in milliseconds and a void callback function.
--	```HAL PWM```: This module is configured to rotate the servo motors to a certain angle using ```TIM2```. The control register ```CCR1``` controls the release mechanism servo while ```CCR2``` controls the spring loading servo
+-	```HAL PWM```: This module is configured to rotate the servo motors to a certain angle using ```TIM2```. The control register ```CCR1``` controls the release mechanism servo while ```CCR2``` controls the spring loading servo.
+
+![MTRX2700 Flowchart](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160400819/66abc03f-5e2a-4cd2-95ed-197918b31efc)
 
 **Integrated Main function**
 -	First, the required peripherals are initialised in order to use the LEDs and user button
@@ -75,6 +77,9 @@
 - The benchtop power supply is used to power the big servo motor that runs on 6 to 7.4V and is responsible to stretch the springs to the particular angles.
 - The small servo motor is run on 5V and is given power from a power supply by connecting it through a breadboard.
 - The 3 springs are a perfect fit for the load to be shot to a long distance. We had also tried the system with 4 springs, but the required force was not generated as the spring constant was too small. We also tried with 2 springs, but the servo struggled a little to handle the load.
+
+![Figure_1](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160400819/e9c8b9b3-b888-45ce-a14f-7a35ae12f6c6)
+
 
 ## Mario Kart Racing:
 ### Requirement Specification: 
