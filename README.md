@@ -9,7 +9,13 @@
 |Mario Kart Racing|Thomas Cook & James Cook
 ## Guess the price
 ### Requirement Specification: 
+- The game "the price is right" overall is supposed to function like the TV show. The game is a simplified online version of the game. The user will need an STM32 microcontroller as well as importing the standard definitions folder for the STM32 "stm32f303xc.h". To use the GUI the required libraries QtCore, QtWidgets and QtGui from PyQt5.
+- Slider Control: The program allows the two users to control PyQt widget sliders through sliding their fingers over the potentiometer. The current value should be displayed to the screen.
+- Timer Control: The program implements a timer that the game players must complete their choice within to play the game.
+- GUI Display: The GUI displays 4 main configurations of the window to simulate the price is right game. The first part is the base loading screen. The following three configurations of the main window are the games 1-3 that are changed based on what the user has provided.
 ### System Design:
+- The game has three STM32 modules that interface with the PyQt Gui.
+- The game transfers the raw potentiometer values for each softpot along with the current timer over serial.
 ### Detailed Design: 
 ![SBD](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/d6ac0d88-d144-49fb-a772-a72be406432f)
 ### Instructions for use:  
