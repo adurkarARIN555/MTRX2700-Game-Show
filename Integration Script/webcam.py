@@ -45,7 +45,7 @@ class WebcamApp(QWidget):
             qimg = QImage(frame.data, width, height, step, QImage.Format_RGB888)
             pixmap = QPixmap.fromImage(qimg)
             self.image_label.setPixmap(pixmap)
-            cv2.imwrite(self.player_name+".png", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
+            cv2.imwrite("User Images/"+self.player_name+".png", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
             print('Photo captured and saved as captured_photo.png')
 
             self.close()

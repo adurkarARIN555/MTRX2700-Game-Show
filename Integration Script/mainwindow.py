@@ -1,8 +1,29 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit
 
 
-import game3, game2, game1, testwebcam
+import game3, game2, game1, webcam
 import sys
+import os
+import shutil
+
+def clear_folder(folder_path):
+    if not os.path.exists(folder_path):
+        print(f"The folder {folder_path} does not exist.")
+        return
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        
+        try:
+            # If it's a file, remove it
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+                print(f"File {file_path} has been removed.")
+            # If it's a directory, remove it and all its contents
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+                print(f"Directory {file_path} and all its contents have been removed.")
+        except Exception as e:
+            print(f"Failed to delete {file_path}. Reason: {e}")
 
 
 class MainWindow(QMainWindow):
@@ -34,7 +55,7 @@ class MainWindow(QMainWindow):
             self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
         self.lineEdit.clear()
 
-        self.w = testwebcam.WebcamApp(player_name_current)
+        self.w = webcam.WebcamApp(player_name_current)
         self.w.showMaximized()
 
     def update_players(self, player_eliminated):
@@ -55,6 +76,10 @@ class MainWindow(QMainWindow):
             self.w = game3.GameWindow("               ".join(self.player_list))
             self.w.submitted.connect(self.update_players)
         self.w.showMaximized()
+
+    def closeEvent(self, event):
+        clear_folder("User Images")
+        event.accept()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
