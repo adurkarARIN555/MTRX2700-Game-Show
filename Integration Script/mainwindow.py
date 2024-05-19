@@ -8,6 +8,9 @@ import sys
 import os
 import shutil
 
+image_width = 350
+image_height = 320
+
 def clear_folder(folder_path):
     if not os.path.exists(folder_path):
         print(f"The folder {folder_path} does not exist.")
@@ -50,48 +53,48 @@ class MainWindow(QMainWindow):
         self.lineEdit.returnPressed.connect(self.player_name_entered)
 
         self.addtextabove = QLabel("Players Remaining:", self)
-        self.addtextabove.setGeometry(50, 40, 200, 200)
+        self.addtextabove.setGeometry(50, 40, 200, 30)
         self.layout.addWidget(self.addtextabove)
 
 
         # Labels for Player Text
         player1name = QLabel(" ", self)
-        player1name.setGeometry(50, 60, 200, 200)
+        player1name.setGeometry(int(50+image_width/2), 300, image_width, image_height)
         self.layout.addWidget(player1name)
 
         player2name = QLabel(" ", self)
-        player2name.setGeometry(250, 60, 200, 200)
+        player2name.setGeometry(int(50 + (1.25*image_width)+image_width/2), 300, image_width, image_height)
         self.layout.addWidget(player2name)
 
         player3name = QLabel(" ", self)
-        player3name.setGeometry(450, 60, 200, 200)
+        player3name.setGeometry(int(50 + (1.25*image_width)*2+image_width/2), 300, image_width, image_height)
         self.layout.addWidget(player3name)
 
         player4name = QLabel(" ", self)
-        player4name.setGeometry(650, 60, 200, 200)
+        player4name.setGeometry(int(50 + (1.25*image_width)*3+image_width/2), 300, image_width, image_height)
         self.layout.addWidget(player4name)
 
         self.player_name_labels = [player1name, player2name, player3name, player4name]
 
         #Labels for Player Images
         player1 = QLabel(self) # label for image
-        player1.setGeometry(50, 120, 200, 220)
+        player1.setGeometry(int(50), 120, image_width, image_height)
 
         player2 = QLabel(self) # label for image
-        player2.setGeometry(250, 120, 200, 220)
+        player2.setGeometry(int(50 + 1.25*image_width), 120, image_width, image_height)
 
         player3 = QLabel(self) # label for image
-        player3.setGeometry(450, 120, 200, 220)
+        player3.setGeometry(int(50 + (1.25*image_width)*2), 120, image_width, image_height)
 
         player4 = QLabel(self) # label for image
-        player4.setGeometry(650, 120, 200, 220)
+        player4.setGeometry(int(50 + (1.25*image_width)*3), 120, image_width, image_height)
 
         self.player_image_labels = [player1, player2, player3, player4]
 
 
         # Button
         self.button = QPushButton("Start Next Game", self)
-        self.button.setGeometry(100, 400, 200, 30)
+        self.button.setGeometry(100, 220+image_height, 200, 30)
         self.button.clicked.connect(self.show_new_window)
 
     def player_name_entered(self):
@@ -124,7 +127,7 @@ class MainWindow(QMainWindow):
         # painter.drawImage(QRectF(0, 0, 1500, 800), current_user_image)
 
         pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[-1]+".png"))
-        scaled_pixmap = pixmap.scaled(150, 100)
+        scaled_pixmap = pixmap.scaled(image_width, image_height)
 
 
 
