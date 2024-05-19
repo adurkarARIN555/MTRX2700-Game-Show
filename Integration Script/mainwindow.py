@@ -162,10 +162,7 @@ class MainWindow(QMainWindow):
         scaled_pixmap = pixmap.scaled(image_width, image_height)
 
         self.player_image_labels[len(self.player_list)-1].setPixmap(scaled_pixmap)
-        #self.label.setPixmap(scaled_pixmap)
         self.layout.addWidget(self.player_image_labels[len(self.player_list)-1])
-
-        #self.label.move(0, 190)
 
 
 
