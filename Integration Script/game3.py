@@ -206,22 +206,20 @@ class GameWindow(QWidget):
     @pyqtSlot(str)
     def player1_update_steering(self, controller_input):
         try:
-            self.player1.delta_angle = float(controller_input.split(",")[0])
+            self.player1.steering_output = float(controller_input.split(",")[0])
             self.player1.velocity = float(controller_input.split(",")[1])
-            # if (self.player1.velocity > 0):
-            self.player1.angle = self.player1.delta_angle + self.player1.angle
-            self.player1.steering_output += self.player1.angle / 10
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 
     @pyqtSlot(str)
     def player2_update_steering(self, controller_input):
         try:
-            self.player2.delta_angle = float(controller_input.split(",")[0])
+            self.player2.steering_output = float(controller_input.split(",")[0])
             self.player2.velocity = float(controller_input.split(",")[1])
-            # if (self.player2.velocity > 0):
-            self.player2.angle = self.player2.delta_angle + self.player2.angle
-            self.player2.steering_output += self.player2.angle / 10
+
+            # self.player2.delta_angle = float(controller_input.split(",")[0])
+            # self.player2.angle = self.player2.delta_angle + self.player2.angle
+            # self.player2.steering_output += self.player2.angle / 10
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 

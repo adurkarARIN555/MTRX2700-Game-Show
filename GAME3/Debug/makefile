@@ -67,7 +67,7 @@ all: main-build
 main-build: embedded-sensors.elf secondary-outputs
 
 dependents:
-	-cd C:/Users/61411/OneDrive/Desktop/MTRX2700-Game-Show/STMF3disco-BSP/Debug && $(MAKE) clean all
+	-cd C:/Users/61411/OneDrive/Desktop/MTRX2700-Game-Show/STMF3disco-BSP/Debug && $(MAKE) all
 
 # Tool invocations
 embedded-sensors.elf embedded-sensors.map: $(OBJS) $(USER_OBJS) C:/Users/61411/OneDrive/Desktop/MTRX2700-Game-Show/STMF3disco-BSP/Debug/libF3-components.a C:\Users\61411\OneDrive\Desktop\MTRX2700-Game-Show\GAME3\STM32F303VCTX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)

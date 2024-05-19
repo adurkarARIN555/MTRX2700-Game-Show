@@ -67,6 +67,8 @@ static void MX_USB_PCD_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 float velocity = 0;
+float angle;
+float steering_output;
 
 void USART1_IRQHandler()
 {
@@ -117,7 +119,11 @@ void read_and_transmit(){
 	  velocity -= 0.25;
   }
 
-  sprintf(string_to_send, "%0.6f,%f\r\n", gyro_values[2]/20000, velocity);
+  float delta_angle = gyro_values[2]/20000;
+  angle += delta_angle;
+  steering_output += angle / 10;
+
+  sprintf(string_to_send, "%0.6f,%f\r\n", steering_output, velocity);
   SerialOutputString(string_to_send, &USART1_PORT);
 }
 
