@@ -89,14 +89,14 @@ class SerialReader(QThread):
                     value1 = int(value[0])
                     value2 = int(value[1])
 
-                    if((self.game_num == 3) and (self.time_last == 12)):
+                    if((self.game_num == 3) and (self.time_last == (16))):
                         ser.close()
 
                     time_current = int(value[2])
 
                     # The purpose of this is to reset the time_last to some other value
                     if (time_current != 0):
-                        if (self.time_last < 12):
+                        if (self.time_last < (16)):
                             self.time_last = time_current
                             self.p1_score = value1
                             self.p2_score = value2
@@ -134,7 +134,7 @@ class GameWindow(QWidget):
     submitted = pyqtSignal(str)
     def __init__(self, argument):
         super().__init__()
-
+        self.showFullScreen()
         self.layout = QVBoxLayout(self)
 
         # self.button = QPushButton('Change Values', self)
@@ -298,7 +298,9 @@ class GameWindow(QWidget):
 
         #self.setCentralWidget(self)
 
-        self.start_serial_reading('COM9')
+        # self.start_serial_reading('COM9')
+        self.start_serial_reading('/dev/tty.usbmodem2103')
+
 
     def calculate_winner(self):
         current_price = 0
@@ -314,10 +316,6 @@ class GameWindow(QWidget):
         abs_1_score = abs(current_price - self.serial_reader.p1_score)
         abs_2_score = abs(current_price - self.serial_reader.p2_score)
 
-        # print(f"Current_price({current_price}) - p1_score({self.serial_reader.p1_score}) = abs_1_score {abs_1_score}")
-        # print(f"Current_price({current_price}) - p2_score({self.serial_reader.p2_score}) = abs_2_score {abs_2_score}")
-
-        # print(self.players)
         condition1 = (self.serial_reader.game_num > 0) and (self.serial_reader.game_num < 4)
         condition2 = self.serial_reader.end_condition and self.can_calculate_winner
         print(self.players)
@@ -339,11 +337,6 @@ class GameWindow(QWidget):
                 self.winning_str = self.players_permanent[0]
                 self.players.remove(self.players_permanent[0])
                 
-                # for elem in self.players:
-                #     if ((elem == "P1") or (elem == "P3")):
-                #         self.players.remove(elem)
-                #         break
-            #worked
             return 2, self.winning_str
         # worked
         if(abs_1_score == abs_2_score):
@@ -379,13 +372,24 @@ class GameWindow(QWidget):
     def update_values(self, new_value1, new_value2, time_t):
         
 
-        if (time_t <= 12):
+        if (time_t <= (16)):
             self.slider2.setValue(new_value1)
             self.slider1.setValue(new_value2)
 
-        self.dial3.setValue(time_t)
-        if (time_t <= 12):
-            self.time_curr.setText(f"{str(time_t)}")
+        if (time_t <= (16)):
+            if (time_t == 0):
+                self.time_curr.setText("Game Start in 3...")
+            elif (time_t == 1):
+                self.time_curr.setText("Game Start in 2...")
+            elif (time_t == 2):
+                self.time_curr.setText("Game Start in 1...")
+            elif (time_t == 3):
+                self.time_curr.setText(f"Round {self.serial_reader.game_num} started!")
+
+            else:
+                self.time_curr.setText(f"{str(time_t-4)}")
+                self.dial3.setValue(time_t-4)
+
         # self.dial2.setValue(time_t)
 
         #worked
@@ -402,7 +406,7 @@ class GameWindow(QWidget):
                 P1_current = self.players[0]
                 P2_current = self.players[1]
 
-        if (time_t <= 12):
+        if (time_t <= (16)):
             self.pot_val_2_label.setText(f"{P2_current}\n$ {str(new_value1)}")
             self.pot_val_1_label.setText(f"{P1_current}\n$ {str(new_value2)}")
         # https://www.facebook.com/marketplace/item/1553942341838619/?ref=search&referral_code=null&referral_story_type=post
@@ -414,7 +418,7 @@ class GameWindow(QWidget):
         elif (self.serial_reader.game_num == 3):
             self.image_label.setPixmap(QPixmap("resources/room.png"))
 
-        if (self.serial_reader.time_last == 12):
+        if (self.serial_reader.time_last == (16)):
             winner = self.calculate_winner()
             #worked
             if(self.serial_reader.game_num == 4):
@@ -424,6 +428,7 @@ class GameWindow(QWidget):
             else:
                 if (self.serial_reader.game_num == 3):
                     self.time_current.setText(f"Winner {winner[1]}\n{self.final_loser} is ELIMINATED!\n")
+                    print(f"FINAL LOSER: {self.final_loser}")
                     self.submitted.emit(self.final_loser)
                     #self.serial_reader.ser.close()
                     self.close()
