@@ -4,12 +4,12 @@
 ## Role allocations:
 |GAME|Person(s) responsible
 |------------|------------------------
-|Guess the Price|Cameron Dimovski
+|The Price Is Right|Cameron Dimovski
 |Catapult Toss|Eashan Garg & Arin Adurkar
-|Mario Kart Racing|Thomas Cook & James Cook
-## Guess the price
+|Mario Kart|Thomas Cook & James Cook
+## The Price Is Right
 ### Requirement Specification: 
-- The game "the price is right" overall is supposed to function like the TV show. The game is a simplified online version of the game. The user will need an STM32 microcontroller as well as importing the standard definitions folder for the STM32 "stm32f303xc.h". To use the GUI the required libraries QtCore, QtWidgets and QtGui from PyQt5.
+- The game "The Price Is Right" overall is supposed to function like the TV show. The game is a simplified online version of the game. The user will need an STM32 microcontroller as well as importing the standard definitions folder for the STM32 "stm32f303xc.h". To use the GUI the required libraries QtCore, QtWidgets and QtGui from PyQt5.
 - Slider Control: The program allows the two users to control PyQt widget sliders through sliding their fingers over the potentiometer. The current value should be displayed to the screen.
 - Timer Control: The program implements a timer that the game players must complete their choice within to play the game.
 - GUI Display: The GUI displays 4 main configurations of the window to simulate the price is right game. The first part is the base loading screen. The following three configurations of the main window are the games 1-3 that are changed based on what the user has provided.
@@ -30,7 +30,9 @@
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
 - The dial gui widget represents the current time that TIM2 is counting.
-- 
+### Individual Modules:
+- ```Timer```: The timer module sends over a serial a continuous timer signal that is only restarted once the STM reset button is pressed.
+- ```HAL PWM```: The HAL_PWM 
 ## Catapult Toss:
 ### Requirement Specification:
 
@@ -99,11 +101,32 @@
 ![Figure_1](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160400819/e9c8b9b3-b888-45ce-a14f-7a35ae12f6c6)
 
 
-## Mario Kart Racing:
+## Mario Kart:
 ### Requirement Specification: 
+- A two-player kart racing game was designed with the desire to replicate the mechanics of Mario Kart Wii.
+- Two STM32F3 microcontrollers are to be used, connected to a single computer through two different COM ports.
+- Rotation of the microcontroller should turn the steering of the vehicle, and pressing or releasing the user button should modulate the velocity of the kart.
+- The first player to complete three laps of the course will survive, with the other player being eliminated.
+
 ### System Design:
-### Detailed Design:  
+![GAME3-basic drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/cdd5f18a-5f7a-4e5b-815c-9c08115ca1b0)
+
+A very high-level functional block diagram shows the design of the current system. The gyroscope on the microcontroller measures the change in rotation of the microcontroller. This is used to rotate the steering axis of the kart. The blue USER button on the microcontroller modulates the velocity of the kart, working by accelerating the kart up to a maximal threshold when the button is pressed, and decelerating the kart down to a minimal threshold when the button is released. These inputs are given to the computer from the COM ports where a python script is displaying a GUI. The gyroscope values are sent back to the microntroller via USART1 velocity and position values are calculated on the microcontroller and then updated on the GUI. Where the position value is calculated to be outside of the bounds of the track, the kart is respawned back to the start of the track. A checkpoint system was developed to ensure no player can continuously drive backwards and forwards to cheat the lap count system. Once the checkpoint is passed (located at the middle of the track (in terms of distance)), the lap count is able to be incremented once the finish line is passed. Where the player has passed the checkpoint, but then crashes their kart (position calculated outside of the track bounds), their checkpoint flag is taken as no passed to ensure no player can pass the checkpoint, then intentionally crash to respawn at the finish line and then have their lap increased. 
+
+### Detailed Design: 
+![GAME3-detailed drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/e3b4c3ad-121e-4958-a579-23dc26791b86)
+
 ### Instructions for use:  
+1. Connect both STM32F3 microcontrollers to the single computer.
+2. Hold the microcontroller level before the race starts (this will ensure the steering is referenced from a comfortable position).
+3. Look at the LEDs on the microcontroller, the green LEDs indicates that microcontroller is Luigi and will control the green kart, similarly, is the LEDs are red, that indicated that micrcontroller is Mario and will control the red kart.
+4. Hold down the blue USER button to accelerate the kart, and let go to decelerate.
+5. Tilt the micrcontroller along the z-axis, the same way you would rotate a car's steering wheel, to rotate the steering angle of the kart.
+6. The game will finish once the one of the players completes three laps.
+
 ### Testing:
+run the tests module
+(explain what each of these will do)
+
 ### Performance:
 
