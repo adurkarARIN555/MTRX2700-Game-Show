@@ -1,6 +1,6 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QSlider, QLabel, QDial
+from PyQt5.QtWidgets import QApplication, QMainWindow, QHBoxLayout, QVBoxLayout, QWidget, QPushButton, QSlider, QLabel, QDial, QDesktopWidget
 from PyQt5.QtCore import Qt, QThread, pyqtSignal, QPointF
 from PyQt5.QtGui import QPainter, QColor, QPen, QBrush, QConicalGradient
 from PyQt5.QtGui import QPixmap
@@ -132,15 +132,14 @@ class SerialReader(QThread):
 
 class GameWindow(QWidget):
     submitted = pyqtSignal(str)
-    def __init__(self, argument):
+    def __init__(self, argument, width, height):
         super().__init__()
+
         self.showFullScreen()
         self.layout = QVBoxLayout(self)
-
-        # self.button = QPushButton('Change Values', self)
-        # self.button.clicked.connect(self.update_values)
-        # self.button.setMinimumHeight(50) 
-        # self.layout.addWidget(self.button)
+        
+        self.setFixedWidth(width)
+        self.setFixedHeight(height)
 
         slider_style = '''
         QSlider::groove:horizontal {
@@ -446,14 +445,13 @@ class GameWindow(QWidget):
         self.serial_reader.start()
 
 
-if hasattr(Qt, 'AA_EnableHighDpiScaling'):
-    QApplication.setAttribute(Qt.AA_EnableHighDpiScaling, True)
-if hasattr(Qt, 'AA_UseHighDpiPixmaps'):
-    QApplication.setAttribute(Qt.AA_UseHighDpiPixmaps, True)
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    main_win = GameWindow("               ".join(["A","B","C","D"]))
+    desktop = QApplication.desktop()
+    screen_geom = desktop.screenGeometry()
+    width = screen_geom.width()
+    height = screen_geom.height()
+    main_win = GameWindow("               ".join(["A","B","C","D"]), width, height)
     main_win.show()
 
     sys.exit(app.exec_())
