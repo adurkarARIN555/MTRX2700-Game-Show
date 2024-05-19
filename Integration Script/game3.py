@@ -23,10 +23,10 @@ kart_size = 60
 
 baud = 115200
 
-#port1 = "COM7"
-port1 = "/dev/cu.usbmodem141303"
-#port2 = "COM10"
-port2 = "/dev/cu.usbmodem141203"
+port1 = "COM7"
+#port1 = "/dev/cu.usbmodem141303"
+port2 = "COM10"
+#port2 = "/dev/cu.usbmodem141203"
 
 class Player:
     def __init__(self, start_x_pos, start_y_pos, port, image, player_id):

@@ -91,6 +91,21 @@ class MainWindow(QMainWindow):
 
         self.player_image_labels = [player1, player2, player3, player4]
 
+        #Labels for Player Crosses
+        player1cross = QLabel(self) # label for image
+        player1cross.setGeometry(int(50), 120, image_width, image_height)
+
+        player2cross = QLabel(self) # label for image
+        player2cross.setGeometry(int(50 + 1.25*image_width), 120, image_width, image_height)
+
+        player3cross = QLabel(self) # label for image
+        player3cross.setGeometry(int(50 + (1.25*image_width)*2), 120, image_width, image_height)
+
+        player4cross = QLabel(self) # label for image
+        player4cross.setGeometry(int(50 + (1.25*image_width)*3), 120, image_width, image_height)
+
+        self.player_cross_labels = [player1cross, player2cross, player3cross, player4cross]
+
 
         # Button
         self.button = QPushButton("Start Next Game", self)
@@ -113,23 +128,26 @@ class MainWindow(QMainWindow):
 
     def update_players(self, player_eliminated):
         if(player_eliminated in self.player_list):
-            print(self.player_list)
-            print(player_eliminated)
+            
+            player_index = 0
+            for player in self.player_list:
+                if(player == player_eliminated):
+                    break
+                player_index+=1
+
             self.player_list.remove(player_eliminated)
-            self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
+
+            pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "Integrated Images", "cross.png"))
+            scaled_pixmap = pixmap.scaled(image_width, image_height)
+
+            self.player_cross_labels[player_index].setPixmap(scaled_pixmap)
+            self.layout.addWidget(self.player_cross_labels[player_index])
+            
 
     def update_images(self):
-        #print("hello")
-        # current_user_image = QImage(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[-1]+".png"))
-
-        # painter = QPainter(self)
-        # painter.setRenderHint(QPainter.Antialiasing)
-        # painter.drawImage(QRectF(0, 0, 1500, 800), current_user_image)
 
         pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[-1]+".png"))
         scaled_pixmap = pixmap.scaled(image_width, image_height)
-
-
 
         self.player_image_labels[len(self.player_list)-1].setPixmap(scaled_pixmap)
         #self.label.setPixmap(scaled_pixmap)
