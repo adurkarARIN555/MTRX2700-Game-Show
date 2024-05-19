@@ -56,11 +56,11 @@
 
 
 ### Instructions for use:
-- Press the Blue User Button on the STM32.
-- Observe the LED movement and try to get maximum LEDs ON. (More LED’s, more strength).
-- The load will be shot with power corresponding to the number of switched-ON LEDs.
-- After the load lands at a certain distance, we the judges measure the distance and the participant having the load shot furthest is promoted to the final level of the game.
-- Wait for the game to reset and play again.
+1. Press the Blue User Button on the STM32.
+2. Observe the LED movement and try to get maximum LEDs ON. (More LED’s, more strength).
+3. The load will be shot with power corresponding to the number of switched-ON LEDs.
+4. After the load lands at a certain distance, we the judges measure the distance and the participant having the load shot furthest is promoted to the final level of the game.
+5. Wait for the game to reset and play again.
 
 ### Testing:
 - The function ```run_tests``` initializes serial communication and runs a number of tests checking the working of various functions related to LEDs, servo motors strength, PWM.
