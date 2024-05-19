@@ -9,10 +9,10 @@ import os
 
 steering_sensitivity = 250
 
-outer_track_width = 1000
-outer_track_height = 625
-outer_track_x = 200
-outer_track_y = 75
+outer_track_width = 1100
+outer_track_height = 725
+outer_track_x = 150
+outer_track_y = 25
 
 inner_track_width = 700
 inner_track_height = 325
@@ -22,6 +22,9 @@ inner_track_y = 220
 kart_size = 60
 
 baud = 115200
+
+port1 = "COM7"
+port2 = "COM10"
 
 class Player:
     def __init__(self, start_x_pos, start_y_pos, port, image, player_id):
@@ -69,9 +72,13 @@ class SerialReader(QObject):
 
     def run(self):
         while self.running:
-            if self.serial_port.in_waiting:
-                controller_input = process_steering_data(self.serial_port)
-                self.data_received.emit(",".join(controller_input))
+            try:
+                if self.serial_port.in_waiting:
+                    controller_input = process_steering_data(self.serial_port)
+                    self.data_received.emit(",".join(controller_input))
+            except:
+                print("Read failed")
+                self.data_received.emit(",".join([0,0]))
 
     def stop(self):
         self.running = False
@@ -95,10 +102,16 @@ class GameWindow(QWidget):
     def __init__(self, argument):
         players = argument.split("               ")
 
-        self.player1 = Player(start_x_pos=670, start_y_pos=120, port="COM10", image="mario.png", player_id=players[0])
-        self.player1.serial_port.write(b'2')
-        self.player2 = Player(start_x_pos=630, start_y_pos=180, port="COM9", image="luigi.png", player_id=players[1])
-        self.player2.serial_port.write(b'3')
+        self.player1 = Player(start_x_pos=670, start_y_pos=95, port=port1, image="mario.png", player_id=players[0])
+        try:
+            self.player1.serial_port.write(b'2')
+        except:
+            print("write 2 failed")
+        self.player2 = Player(start_x_pos=630, start_y_pos=155, port=port2, image="luigi.png", player_id=players[1])
+        try:
+            self.player2.serial_port.write(b'3')
+        except:
+            print("write 3 failed")
 
         super().__init__()
         self.setGeometry(100, 100, 400, 200)
@@ -122,6 +135,9 @@ class GameWindow(QWidget):
         painter.setBrush(QColor(255, 255, 255))
         #painter.drawEllipse(inner_track_x, inner_track_y, inner_track_width, inner_track_height)
 
+        painter.drawImage(QRectF(695, 25, 10, 195), finishline_image)
+        painter.drawImage(QRectF(inner_track_x-328, inner_track_y-198, inner_track_width+680, inner_track_height+400), inner_background_image)
+
         for player in [self.player1, self.player2]:
 
             transformed_kart_image = player.image_obj.transformed(QTransform().rotate(player.steering_output*(180/np.pi) + 90))
@@ -133,10 +149,9 @@ class GameWindow(QWidget):
 
             rotated_rect = transform_for_rect.mapRect(qrect_obj)
 
-            painter.drawImage(QRectF(695, 75, 10, 145), finishline_image)
-            painter.drawImage(QRectF(inner_track_x-328, inner_track_y-198, inner_track_width+680, inner_track_height+400), inner_background_image)
             painter.drawImage(rotated_rect, transformed_kart_image)
-            painter.drawImage(QRectF(inner_track_x-335, inner_track_y-198, inner_track_width+660, inner_track_height+400), td_inner_background_image)
+            
+        painter.drawImage(QRectF(inner_track_x-335, inner_track_y-198, inner_track_width+660, inner_track_height+400), td_inner_background_image)
         
 
     @pyqtSlot(str)
@@ -144,9 +159,9 @@ class GameWindow(QWidget):
         try:
             self.player1.delta_angle = float(controller_input.split(",")[0])
             self.player1.velocity = float(controller_input.split(",")[1])
-            if (self.player1.velocity > 0):
-                self.player1.angle = self.player1.delta_angle + self.player1.angle
-                self.player1.steering_output += self.player1.angle / 10
+            # if (self.player1.velocity > 0):
+            self.player1.angle = self.player1.delta_angle + self.player1.angle
+            self.player1.steering_output += self.player1.angle / 10
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 
@@ -155,9 +170,9 @@ class GameWindow(QWidget):
         try:
             self.player2.delta_angle = float(controller_input.split(",")[0])
             self.player2.velocity = float(controller_input.split(",")[1])
-            if (self.player2.velocity > 0):
-                self.player2.angle = self.player2.delta_angle + self.player2.angle
-                self.player2.steering_output += self.player2.angle / 10
+            # if (self.player2.velocity > 0):
+            self.player2.angle = self.player2.delta_angle + self.player2.angle
+            self.player2.steering_output += self.player2.angle / 10
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 
@@ -172,7 +187,10 @@ class GameWindow(QWidget):
                 player.x_pos = player.start_x_pos
                 player.y_pos = player.start_y_pos
                 player.passed = 0
-                player.serial_port.write(b'1')
+                try:
+                    player.serial_port.write(b'1')
+                except:
+                    print("write 1 failed")
             
             checkpoint_check = checkpoint(player.x_pos, player.y_pos, player.passed)
             if (checkpoint_check == 2):
@@ -216,16 +234,16 @@ def check_collided_inner(x, y):
 
 def checkpoint(x, y, passed):
     if (passed == 0):
-        if ((x >= 670) and (x <= 690) and (y >= 545) and (y <= 700)): 
+        if ((x >= 670) and (x <= 690) and (y >= 545) and (y <= 750)): 
             return 2
     else:
-        if ((x >= 670) and (x <= 690) and (y >= 75) and (y <= 220)):
+        if ((x >= 670) and (x <= 690) and (y >= 25) and (y <= 220)):
             return 1
     
     return 0
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = GameWindow()
+    window = GameWindow("               ".join(["Tom", "James"]))
     window.showMaximized()
     sys.exit(app.exec_())
