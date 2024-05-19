@@ -7,7 +7,7 @@ import numpy as np
 import threading
 import os
 
-steering_sensitivity = 250
+#steering_sensitivity = 250
 
 outer_track_width = 1100
 outer_track_height = 725
@@ -60,10 +60,11 @@ def process_steering_data(serial_port):
             data = line.split(",")
             #print(data)
             steering_angle = float(data[0])  # Angle
-            velocity = (data[1])
-        return [str(-steering_angle / steering_sensitivity), velocity]
+            x_pos = (data[1])
+            y_pos = (data[2])
+        return [str(steering_angle), x_pos, y_pos]
     except:
-        return(["0","0"])
+        return(["0","0","0"])
 
 
 class SerialReader(QObject):
@@ -176,7 +177,10 @@ class GameWindow(QWidget):
     def player1_update_steering(self, controller_input):
         try:
             self.player1.steering_output = float(controller_input.split(",")[0])
-            self.player1.velocity = float(controller_input.split(",")[1])
+            #self.player1.velocity = float(controller_input.split(",")[1])
+
+            self.player1.x_pos = float(controller_input.split(",")[1])
+            self.player1.y_pos = float(controller_input.split(",")[2])
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 
@@ -184,11 +188,10 @@ class GameWindow(QWidget):
     def player2_update_steering(self, controller_input):
         try:
             self.player2.steering_output = float(controller_input.split(",")[0])
-            self.player2.velocity = float(controller_input.split(",")[1])
+            #self.player2.velocity = float(controller_input.split(",")[1])
 
-            # self.player2.delta_angle = float(controller_input.split(",")[0])
-            # self.player2.angle = self.player2.delta_angle + self.player2.angle
-            # self.player2.steering_output += self.player2.angle / 10
+            self.player2.x_pos = float(controller_input.split(",")[1])
+            self.player2.y_pos = float(controller_input.split(",")[2])
         except ValueError:
             print("Invalid data received from serial port:", controller_input)
 
@@ -196,8 +199,8 @@ class GameWindow(QWidget):
 
         for player in [self.player1, self.player2]:
 
-            player.x_pos += player.velocity * np.cos(player.steering_output)
-            player.y_pos += player.velocity * np.sin(player.steering_output)
+            # player.x_pos += player.velocity * np.cos(player.steering_output)
+            # player.y_pos += player.velocity * np.sin(player.steering_output)
 
             if(check_collided_outer(player.x_pos, player.y_pos) or check_collided_inner(player.x_pos, player.y_pos)):
                 player.x_pos = player.start_x_pos

@@ -69,24 +69,42 @@ static void MX_USB_PCD_Init(void);
 /* USER CODE BEGIN 0 */
 float velocity = 0;
 float angle;
-float steering_output;
+float steering_output_raw;
+float x_pos;
+float y_pos;
+float x_reset_pos;
+float y_reset_pos;
 
 void USART1_IRQHandler()
 {
-	uint8_t string_to_send[64] = "This is a string !\r\n";
-	sprintf(string_to_send, "%0.6f,%f\r\n", 0, 0);
-    SerialOutputString(string_to_send, &USART1_PORT);
 	if((USART1->ISR & USART_ISR_RXNE)){
 		velocity = 0;
 		uint8_t dummy;
 		SerialReceiveChar(&USART1_PORT, &dummy);
-		if(dummy == '2'){
+		if(dummy == '1'){
+			x_pos = x_reset_pos;
+			y_pos = y_reset_pos;
+		}
+		else if(dummy == '2'){
 			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
 			*led_register = 0b00100010;
+			x_reset_pos = 670;
+			y_reset_pos = 95;
+			x_pos = x_reset_pos;
+			y_pos = y_reset_pos;
+			angle = 0;
+			steering_output_raw = 0;
+
 		}
 		else if(dummy == '3'){
 			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
 			*led_register = 0b10001000;
+			x_reset_pos = 630;
+			y_reset_pos = 155;
+			x_pos = x_reset_pos;
+			y_pos = y_reset_pos;
+			angle = 0;
+			steering_output_raw = 0;
 		}
 	}
 }
@@ -113,18 +131,23 @@ void read_and_transmit(){
   // Dereference the pointer to get the value at that address
   int value = *ptr;
 
-  if((value&0x01) && (velocity < 15)){
-	  velocity+=0.5;
+  if((value&0x01) && (velocity < 4.5)){
+	  velocity+=0.1;
   }
-  else if(!(value&0x01) && (velocity > 0.01)){
-	  velocity -= 0.25;
+  else if(!(value&0x01) && (velocity > 0)){
+	  velocity -= 0.05;
   }
 
   float delta_angle = gyro_values[2]/20000;
   angle += delta_angle;
-  steering_output += angle / 10;
+  steering_output_raw += angle / 10;
 
-  sprintf(string_to_send, "%0.6f,%f\r\n", steering_output, velocity);
+  float steering_output = steering_output_raw/250.0;
+
+  x_pos += velocity*cos(-steering_output);
+  y_pos += velocity*sin(-steering_output);
+
+  sprintf(string_to_send, "%0.6f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos);
   SerialOutputString(string_to_send, &USART1_PORT);
 }
 
