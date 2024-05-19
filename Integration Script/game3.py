@@ -23,10 +23,10 @@ kart_size = 60
 
 baud = 115200
 
-#port1 = "COM7"
-port1 = "/dev/cu.usbmodem142203"
-#port2 = "COM10"
-port2 = "/dev/cu.usbmodem142303"
+port1 = "COM7"
+port2 = "COM10"
+# port1 = "/dev/cu.usbmodem142203"
+# port2 = "/dev/cu.usbmodem142303"
 
 class Player:
     def __init__(self, start_x_pos, start_y_pos, port, image, player_id):
@@ -42,6 +42,8 @@ class Player:
         self.steering_output = 0
         self.passed = 0
         self.lap_count = 0
+
+        self.image = image
 
         self.image_obj = QImage(os.path.join(os.path.dirname(__file__), "GAME3 Images", image))
 
@@ -116,6 +118,9 @@ class GameWindow(QWidget):
     def __init__(self, argument, width, height):
         players = argument.split("               ")
 
+        self.screenwidth = width
+        self.screenheight = height
+
         self.player1 = Player(start_x_pos=670, start_y_pos=95, port=port1, image="mario.png", player_id=players[0])
         try:
             self.player1.serial_port.write(b'2')
@@ -128,7 +133,7 @@ class GameWindow(QWidget):
             print("write 3 failed")
 
         super().__init__()
-        self.setGeometry(100, 100, 400, 200)
+        # self.setGeometry(100, 100, 400, 200)
         self.setStyleSheet("background-color: white;")
 
         self.player1.serial_reader.data_received.connect(self.player1_update_steering)
@@ -153,20 +158,20 @@ class GameWindow(QWidget):
         painter.drawImage(QRectF(inner_track_x-328, inner_track_y-198, inner_track_width+680, inner_track_height+400), inner_background_image)
 
         for player in [self.player1, self.player2]:
-            if (player == self.player1):
-                if (player.lap_count == 0):
-                    painter.drawImage(QRectF(65, 85, 70, 70), one_image)
-                elif (player.lap_count == 1):
-                    painter.drawImage(QRectF(100, 85, 70, 70), two_image)
-                else:
-                    painter.drawImage(QRectF(100, 85, 100, 100), three_image)
-            else:
-                if (player.lap_count == 0):
-                    painter.drawImage(QRectF(1200, 85, 70, 70), one_image)
-                elif (player.lap_count == 1):
-                    painter.drawImage(QRectF(1200, 85, 70, 70), two_image)
-                else:
-                    painter.drawImage(QRectF(1100, 85, 100, 100), three_image)
+            # if (player == self.player1):
+            #     if (player.lap_count == 0):
+            #         painter.drawImage(QRectF(65, 85, 70, 70), one_image)
+            #     elif (player.lap_count == 1):
+            #         painter.drawImage(QRectF(100, 85, 70, 70), two_image)
+            #     else:
+            #         painter.drawImage(QRectF(100, 85, 100, 100), three_image)
+            # else:
+            #     if (player.lap_count == 0):
+            #         painter.drawImage(QRectF(1200, 85, 70, 70), one_image)
+            #     elif (player.lap_count == 1):
+            #         painter.drawImage(QRectF(1200, 85, 70, 70), two_image)
+            #     else:
+            #         painter.drawImage(QRectF(1100, 85, 100, 100), three_image)
 
             transformed_kart_image = player.image_obj.transformed(QTransform().rotate(player.steering_output*(180/np.pi) + 90))
 
@@ -181,11 +186,22 @@ class GameWindow(QWidget):
             
         painter.drawImage(QRectF(inner_track_x-335, inner_track_y-198, inner_track_width+660, inner_track_height+400), td_inner_background_image)
 
-        painter.drawImage(QRectF(170, 85, 100, 100), three_image)
-        painter.drawImage(QRectF(1300, 85, 100, 100), three_image)
-        painter.drawImage(QRectF(120, 85, 100, 100), slash_image)
-        painter.drawImage(QRectF(1250, 85, 100, 100), slash_image)
-        
+        # painter.drawImage(QRectF(170, 85, 100, 100), three_image)
+        # painter.drawImage(QRectF(1300, 85, 100, 100), three_image)
+        # painter.drawImage(QRectF(120, 85, 100, 100), slash_image)
+        # painter.drawImage(QRectF(1250, 85, 100, 100), slash_image)
+
+        box_for_text = QRectF(0,0,250,150)
+        painter.setBrush(QColor(255, 255, 255))
+        painter.drawRect(box_for_text)
+        painter.drawText(30,30,str(self.player1.lap_count+1)+"/3")
+        painter.drawText(30,70,self.player1.player_id+" is "+self.player1.image.split(".png")[0])
+
+        box_for_text = QRectF(1500-250,0,250,150)
+        painter.setBrush(QColor(255, 255, 255))
+        painter.drawRect(box_for_text)
+        painter.drawText(1500-250+30,30,str(self.player2.lap_count+1)+"/3")
+        painter.drawText(1500-250+30,70,self.player2.player_id+" is "+self.player2.image.split(".png")[0])
 
     @pyqtSlot(str)
     def player1_update_steering(self, controller_input):
@@ -277,6 +293,12 @@ def checkpoint(x, y, passed):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = GameWindow("               ".join(["Tom", "James"]), 2,2)
+
+    desktop = QApplication.desktop()
+    screen_geom = desktop.screenGeometry()
+    widthscreen = screen_geom.width()
+    heightscreen = screen_geom.height()
+    
+    window = GameWindow("               ".join(["Tom", "James"]), widthscreen,heightscreen)
     window.showMaximized()
     sys.exit(app.exec_())
