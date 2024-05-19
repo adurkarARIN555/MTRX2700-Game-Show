@@ -101,7 +101,7 @@ class GameWindow(QWidget):
 
     submitted = pyqtSignal(str)
 
-    def __init__(self, argument):
+    def __init__(self, argument, width, height):
         players = argument.split("               ")
 
         self.player1 = Player(start_x_pos=670, start_y_pos=95, port=port1, image="mario.png", player_id=players[0])

@@ -297,8 +297,8 @@ class GameWindow(QWidget):
 
         #self.setCentralWidget(self)
 
-        # self.start_serial_reading('COM9')
-        self.start_serial_reading('/dev/tty.usbmodem2103')
+        self.start_serial_reading('COM9')
+        #self.start_serial_reading('/dev/tty.usbmodem2103')
 
 
     def calculate_winner(self):
@@ -452,6 +452,6 @@ if __name__ == '__main__':
     width = screen_geom.width()
     height = screen_geom.height()
     main_win = GameWindow("               ".join(["A","B","C","D"]), width, height)
-    main_win.show()
+    main_win.showMaximized()
 
     sys.exit(app.exec_())
