@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit
 
 
-import game3, game2, game1
+import game3, game2, game1, testwebcam
 import sys
 
 
@@ -29,9 +29,13 @@ class MainWindow(QMainWindow):
 
     def player_name_entered(self):
         if(len(self.player_list)<4):
-            self.player_list.append(self.lineEdit.text())
+            player_name_current = self.lineEdit.text()
+            self.player_list.append(player_name_current)
             self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
         self.lineEdit.clear()
+
+        self.w = testwebcam.WebcamApp(player_name_current)
+        self.w.showMaximized()
 
     def update_players(self, player_eliminated):
         if(player_eliminated in self.player_list):
