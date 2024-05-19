@@ -9,11 +9,28 @@
 |Mario Kart Racing|Thomas Cook & James Cook
 ## Guess the price
 ### Requirement Specification: 
+- The game "the price is right" overall is supposed to function like the TV show. The game is a simplified online version of the game. The user will need an STM32 microcontroller as well as importing the standard definitions folder for the STM32 "stm32f303xc.h". To use the GUI the required libraries QtCore, QtWidgets and QtGui from PyQt5.
+- Slider Control: The program allows the two users to control PyQt widget sliders through sliding their fingers over the potentiometer. The current value should be displayed to the screen.
+- Timer Control: The program implements a timer that the game players must complete their choice within to play the game.
+- GUI Display: The GUI displays 4 main configurations of the window to simulate the price is right game. The first part is the base loading screen. The following three configurations of the main window are the games 1-3 that are changed based on what the user has provided.
 ### System Design:
+- The game has three STM32 modules that interface with the PyQt Gui.
+- The game transfers the raw potentiometer values for each softpot along with the current timer over serial. These values are sent over serial as a comma seperated list in which these are parsed into a list in Python.
 ### Detailed Design: 
+![SBD](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/d6ac0d88-d144-49fb-a772-a72be406432f)
 ### Instructions for use:  
+- Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
+- The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
+- Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
+- The user will have 15 seconds in total to make a decision on the price of the object including 3 seconds to observe the image and 12 seconds to make a decision.
+- A decision can be made by using either of the sliders and the player that has successfully guessed the price that is closest to the actual price of the image object will win.
+- Once the timer runs out in every game a decision on the price can no longer be made.
+- When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
 ### Testing:
 ### Performance:
+- The current slider value represents current resistance from the potentiometer at that time.
+- The dial gui widget represents the current time that TIM2 is counting.
+- 
 ## Catapult Toss:
 ### Requirement Specification:
 
@@ -21,6 +38,7 @@
 - Indication by the power meter will determine how far a projectile is tossed by the catapult
 - Whoever makes the projecile travel the least distance is eliminated
   
+
 ### System Design:
   
 - In order to simulate the power meter, the STM board LEDs will cycle back and forth at about 5ms per change.
@@ -56,11 +74,11 @@
 
 
 ### Instructions for use:
-- Press the Blue User Button on the STM32.
-- Observe the LED movement and try to get maximum LEDs ON. (More LED’s, more strength).
-- The load will be shot with power corresponding to the number of switched-ON LEDs.
-- After the load lands at a certain distance, we the judges measure the distance and the participant having the load shot furthest is promoted to the final level of the game.
-- Wait for the game to reset and play again.
+1. Press the Blue User Button on the STM32.
+2. Observe the LED movement and try to get maximum LEDs ON. (More LED’s, more strength).
+3. The load will be shot with power corresponding to the number of switched-ON LEDs.
+4. After the load lands at a certain distance, we the judges measure the distance and the participant having the load shot furthest is promoted to the final level of the game.
+5. Wait for the game to reset and play again.
 
 ### Testing:
 - The function ```run_tests``` initializes serial communication and runs a number of tests checking the working of various functions related to LEDs, servo motors strength, PWM.
