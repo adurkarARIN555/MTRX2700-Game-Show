@@ -2,9 +2,11 @@ import sys
 import cv2
 from PyQt5.QtWidgets import QApplication, QLabel, QPushButton, QVBoxLayout, QWidget
 from PyQt5.QtGui import QImage, QPixmap
-from PyQt5.QtCore import QTimer
+from PyQt5.QtCore import QTimer, pyqtSignal
 
 class WebcamApp(QWidget):
+    submitted = pyqtSignal()
+
     def __init__(self, argument):
         super().__init__()
         self.player_name = argument
@@ -48,6 +50,7 @@ class WebcamApp(QWidget):
             cv2.imwrite("User Images/"+self.player_name+".png", cv2.cvtColor(frame, cv2.COLOR_RGB2BGR))
             print('Photo captured and saved as captured_photo.png')
 
+            self.submitted.emit()
             self.close()
 
     # def closeEvent(self, event):

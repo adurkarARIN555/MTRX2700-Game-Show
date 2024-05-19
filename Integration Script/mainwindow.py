@@ -1,4 +1,6 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QLineEdit, QGridLayout
+from PyQt5.QtGui import QPixmap
+#from PyQt5.QtCore import QRectF
 
 
 import game3, game2, game1, webcam
@@ -35,17 +37,24 @@ class MainWindow(QMainWindow):
 
         self.player_list = []
 
+        self.layout = QGridLayout(self)
+
         self.lineEdit = QLineEdit(self)
         self.lineEdit.setGeometry(10, 10, 200, 30)
         self.lineEdit.returnPressed.connect(self.player_name_entered)
 
-        # Label
+        # Labels
         self.label = QLabel("players remaining:\n\r"+"               ".join(self.player_list), self)
-        self.label.setGeometry(50, 50, 2000, 30)
+        self.label.setGeometry(50, 50, 200, 200)
+        self.layout.addWidget(self.label)
+
+        #Labels for Player Images
+        self.player1 = QLabel(self) # label for image
+        self.player1.setGeometry(50, 120, 200, 200)
 
         # Button
         self.button = QPushButton("Start Next Game", self)
-        self.button.setGeometry(100, 100, 100, 30)
+        self.button.setGeometry(100, 400, 200, 30)
         self.button.clicked.connect(self.show_new_window)
 
     def player_name_entered(self):
@@ -56,7 +65,11 @@ class MainWindow(QMainWindow):
         self.lineEdit.clear()
 
         self.w = webcam.WebcamApp(player_name_current)
+        self.w.submitted.connect(self.update_images)
         self.w.showMaximized()
+
+        #User Images/self.player_name_current.png
+        #print("Hello")
 
     def update_players(self, player_eliminated):
         if(player_eliminated in self.player_list):
@@ -64,6 +77,24 @@ class MainWindow(QMainWindow):
             print(player_eliminated)
             self.player_list.remove(player_eliminated)
             self.label.setText("players remaining:\n\r"+"               ".join(self.player_list))
+
+    def update_images(self):
+        #print("hello")
+        # current_user_image = QImage(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[-1]+".png"))
+
+        # painter = QPainter(self)
+        # painter.setRenderHint(QPainter.Antialiasing)
+        # painter.drawImage(QRectF(0, 0, 1500, 800), current_user_image)
+
+        pixmap = QPixmap(os.path.join(os.path.dirname(__file__), "User Images", self.player_list[-1]+".png"))
+        scaled_pixmap = pixmap.scaled(150, 100)
+        self.player1.setPixmap(scaled_pixmap)
+        #self.label.setPixmap(scaled_pixmap)
+        self.layout.addWidget(self.player1)
+
+        #self.label.move(0, 190)
+
+
 
     def show_new_window(self, checked):
         if(len(self.player_list) == 4):
