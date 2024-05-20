@@ -13,6 +13,7 @@
 - Slider Control: The program allows the two users to control PyQt widget sliders through sliding their fingers over the potentiometer. The current value should be displayed to the screen.
 - Timer Control: The program implements a timer that the game players must complete their choice within to play the game.
 - GUI Display: The GUI displays 4 main configurations of the window to simulate the price is right game. The first part is the base loading screen. The following three configurations of the main window are the games 1-3 that are changed based on what the user has provided.
+- HardWare: The user will need 2 SpectreSymbol soft potentiometers. 1 breadboard. One USB chord and 10 wires. 
 ### System Design:
 - The game has three STM32 modules that interface with the PyQt Gui.
 - The game transfers the raw potentiometer values for each softpot along with the current timer over serial. These values are sent over serial as a comma seperated list in which these are parsed into a list in Python.
@@ -21,6 +22,9 @@
 
 
 ### Instructions for use:  
+#### Before gameplay:
+1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC.
+#### During Game Play:
 1. Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
 2. The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
 3. Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
@@ -34,7 +38,7 @@
 - The dial gui widget represents the current time that TIM2 is counting.
 ### Individual Modules:
 - ```Timer```: The timer module sends over a serial a continuous timer signal that is only restarted once the STM reset button is pressed.
-- ```HAL PWM```: The HAL_PWM 
+- ```HAL PWM```: The HAL_PWM is 
 ## Catapult Toss:
 ### Requirement Specification:
 
