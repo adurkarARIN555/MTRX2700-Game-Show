@@ -67,6 +67,8 @@ static void MX_USB_PCD_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+// Defining variables
 float velocity = 0;
 float angle;
 float steering_output_raw;
@@ -75,30 +77,36 @@ float y_pos;
 float x_reset_pos;
 float y_reset_pos;
 
+// Determines how to proceed based on the interrupt given through USART1
 void USART1_IRQHandler()
 {
-	if((USART1->ISR & USART_ISR_RXNE)){
-		velocity = 0;
+	if((USART1->ISR & USART_ISR_RXNE)){ 												// See if there is data in the receive data register available to be read
+		velocity = 0; 																	// Reset the velocity
 		uint8_t dummy;
-		SerialReceiveChar(&USART1_PORT, &dummy);
-		if(dummy == '1'){
+
+		SerialReceiveChar(&USART1_PORT, &dummy); 										// Get the character from the serial port
+
+		if(dummy == '1'){ 																// Indicates that the kart went outside of the track and needs to be respawned
 			x_pos = x_reset_pos;
 			y_pos = y_reset_pos;
 		}
-		else if(dummy == '2'){
-			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
-			*led_register = 0b00100010;
+		else if(dummy == '2'){ 															// Used to initialise player 1, Mario
+			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1; 						// Get the address of the LED panel
+			*led_register = 0b00100010; 												// Set the red LEDs on
+
+			// Sets the kart position and angle
 			x_reset_pos = 670;
 			y_reset_pos = 95;
 			x_pos = x_reset_pos;
 			y_pos = y_reset_pos;
 			angle = 0;
 			steering_output_raw = 0;
-
 		}
-		else if(dummy == '3'){
-			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
-			*led_register = 0b10001000;
+		else if(dummy == '3'){ 															// Used to initialise player 2, Luigi
+			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1; 						// Get the address of the LED panel
+			*led_register = 0b10001000; 												// Set the green LEDs on
+
+			// Sets the kart position and angle
 			x_reset_pos = 630;
 			y_reset_pos = 155;
 			x_pos = x_reset_pos;
@@ -109,46 +117,40 @@ void USART1_IRQHandler()
 	}
 }
 
+// Enables the use of clocks
 void enable_clocks() {
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOEEN;
-
-	// worked
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
-	// worked
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOEEN; 		// Enables GPIOA, GPIOC, and GPIOE clocks
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 												// Enables TIM2 clock
 }
 
+// Reads the sensor data and transmits over serial
 void read_and_transmit(){
-  uint8_t string_to_send[64] = "This is a string !\r\n";
+  uint8_t string_to_send[64] = "This is a string !\r\n"; 								// Test string
 
-  float gyro_values[3];
-  BSP_GYRO_GetXYZ(&gyro_values[0]);
+  float gyro_values[3]; 																// Array to store the gyroscope data
+  BSP_GYRO_GetXYZ(&gyro_values[0]); 													// Z-axis data from gyroscope
 
-  int *ptr;
+  int *ptr; 																			// Pointer to be used for GPIOA IDR
+  ptr = (int *)(0x48000000 + 0x10); 													// Address of GPIOA IDR
+  int value = *ptr; 																	// Gets the value at the GPIOA IDR
 
-  // Assign the desired address to the pointer
-  ptr = (int *)(0x48000000 + 0x10);
-
-  // Dereference the pointer to get the value at that address
-  int value = *ptr;
-
-  if((value&0x01) && (velocity < 4.5)){
-	  velocity+=0.1;
+  if((value&0x01) && (velocity < 4.5)){ 												// When the USER button is being pressed and the velocity is below the upper threshold, accelerate the kart
+	  velocity+=0.1; 																	// Increases the kart's velocity
   }
-  else if(!(value&0x01) && (velocity > 0)){
-	  velocity -= 0.05;
+  else if(!(value&0x01) && (velocity > 0)){ 											// When the USER button is not being pressed and the velocity is above the lower threshold, decelerate the kart
+	  velocity -= 0.05;																	// Decreases the kart's velocity
   }
 
-  float delta_angle = gyro_values[2]/20000;
-  angle += delta_angle;
-  steering_output_raw += angle / 10;
+  float delta_angle = gyro_values[2]/20000; 											// Gets the new gyroscope data
+  angle += delta_angle; 																// Adds the change in the gyroscope angle to the current angle of the kart
+  steering_output_raw += angle / 10; 													// Scales down the angle to be applied to the kart's steering
+  float steering_output = steering_output_raw/250.0; 									// Updates the kart's steering angle
 
-  float steering_output = steering_output_raw/250.0;
+  x_pos += velocity*cos(-steering_output); 												// Updates the x-position of the kart
+  y_pos += velocity*sin(-steering_output); 												// Updates the y-position of the kart
 
-  x_pos += velocity*cos(-steering_output);
-  y_pos += velocity*sin(-steering_output);
-
-  sprintf(string_to_send, "%0.6f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos);
-  SerialOutputString(string_to_send, &USART1_PORT);
+  sprintf(string_to_send, "%0.6f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos); // Formats the output string
+  SerialOutputString(string_to_send, &USART1_PORT); 									// Transmits the output string over serial
 }
 
 /* USER CODE END 0 */
