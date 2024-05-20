@@ -16,17 +16,17 @@
 ### System Design:
 - The game has three STM32 modules that interface with the PyQt Gui.
 - The game transfers the raw potentiometer values for each softpot along with the current timer over serial. These values are sent over serial as a comma seperated list in which these are parsed into a list in Python.
-### Detailed Design: 
+### System Block Diagram: 
 ![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/c09842ea-5df0-414c-99ad-9011200839f6)
 
 ### Instructions for use:  
-- Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
-- The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
-- Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
-- The user will have 15 seconds in total to make a decision on the price of the object including 3 seconds to observe the image and 12 seconds to make a decision.
-- A decision can be made by using either of the sliders and the player that has successfully guessed the price that is closest to the actual price of the image object will win.
-- Once the timer runs out in every game a decision on the price can no longer be made.
-- When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
+1. Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
+2. The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
+3. Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
+4. The user will have 15 seconds in total to make a decision on the price of the object including 3 seconds to observe the image and 12 seconds to make a decision.
+5. A decision can be made by using either of the sliders and the player that has successfully guessed the price that is closest to the actual price of the image object will win.
+6. Once the timer runs out in every game a decision on the price can no longer be made.
+7. When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
 ### Testing:
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
