@@ -17,7 +17,8 @@
 - The game has three STM32 modules that interface with the PyQt Gui.
 - The game transfers the raw potentiometer values for each softpot along with the current timer over serial. These values are sent over serial as a comma seperated list in which these are parsed into a list in Python.
 ### System Block Diagram: 
-![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/c09842ea-5df0-414c-99ad-9011200839f6)
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/2a843a68-242b-4861-8263-013f6089d3a2)
+
 
 ### Instructions for use:  
 1. Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
