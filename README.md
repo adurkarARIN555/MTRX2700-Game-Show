@@ -23,7 +23,8 @@
 
 ### Instructions for use:  
 #### Before gameplay:
-1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC.
+1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC.<img width="418" alt="image" src="https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/cbee431d-c4d6-494b-ba52-a84dc03dc26e">
+
 #### During Game Play:
 1. Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
 2. The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
