@@ -13,12 +13,8 @@ port1 = "COM7"
 port2 = "COM10"
 outer_track_width = 1100
 outer_track_height = 725
-outer_track_x = 150
+outer_track_x = 380
 outer_track_y = 25
-inner_track_width = 700
-inner_track_height = 325
-inner_track_x = 350
-inner_track_y = 220
 kart_size = 60
 baud = 115200
 player1_start_x_position = 670
@@ -30,33 +26,40 @@ background_x_offset = 0
 background_y_offset = 0
 background_width = 1500
 background_height = 800
-finish_line_x_offset = 695
+finish_line_x_offset = 940
 finish_line_y_offset = 25
 finish_line_width = 10
 finish_line_height = 195
-inner_background_x_offset = 328
+
+inner_background_x_offset = 328#100
 inner_background_y_offset = 198
 inner_background_width = 680
 inner_background_height = 400
-td_inner_background_x_offset = 335
+
+inner_track_width = 700
+inner_track_height = 325
+inner_track_x = 350+(228)
+inner_track_y = 220
+
+td_inner_background_x_offset = 100+228
 td_inner_background_width = 660
 player1_textbox_x_offset = 0
 player1_textbox_y_offset = 0
 textbox_width = 250
 textbox_height = 150
-player2_textbox_x_offset = 1250
+player2_textbox_x_offset = 1680
 player2_textbox_y_offset = 0
 player1_text_offset_x = 30
 player1_text_offset_y = 70
-player2_text_offset_x = 1280
+player2_text_offset_x = 1710
 player2_text_offset_y = 70
 player1_lap_count_text_offset_x = 30
 player1_lap_count_text_offset_y = 30
-player2_lap_count_text_offset_x = 1280
+player2_lap_count_text_offset_x = 1710
 player2_lap_count_text_offset_y = 30
 maximum_laps = 3
-checkpoint_lower_bound_x = 670
-checkpoint_upper_bound_x = 690
+checkpoint_lower_bound_x = 670+228
+checkpoint_upper_bound_x = 690+228
 finish_line_lower_bound_y = 25
 finish_line_upper_bound_y = 220
 bottom_checkpoint_lower_bound_y = 545
@@ -104,6 +107,7 @@ def process_steering_data(serial_port):
             steering_angle = float(data[0])
             x_pos = (data[1])
             y_pos = (data[2])
+            print(data)
         return [str(steering_angle), x_pos, y_pos]
     except:
         return(["0","0","0"])
@@ -189,7 +193,7 @@ class GameWindow(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.Antialiasing)
         # Displays the background on the GUI
-        painter.drawImage(QRectF(background_x_offset, background_y_offset, background_width, background_height), background_image)
+        painter.drawImage(QRectF(background_x_offset, background_y_offset, self.screenwidth, self.screenheight), background_image)
         painter.setBrush(QColor(30, 30, 0))
         # Displays the track on the GUI
         painter.drawEllipse(outer_track_x, outer_track_y, outer_track_width, outer_track_height)
