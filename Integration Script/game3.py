@@ -319,7 +319,7 @@ def checkpoint(x, y, passed):
         if ((x >= checkpoint_lower_bound_x) and (x <= checkpoint_upper_bound_x) and (y >= finish_line_lower_bound_y) and (y <= finish_line_upper_bound_y)):
             return 1
 
-    # Kart has not passed the checkpoint
+    # Kart has not passed the checkpoint or has passed the checkpoint but not the finish line
     return 0
 
 if __name__ == '__main__':
