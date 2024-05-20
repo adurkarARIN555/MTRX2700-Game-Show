@@ -24,7 +24,8 @@
 ### Instructions for use:  
 #### Before gameplay:
 1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC.
-![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/446d4164-70b6-411a-b94e-893f1886ab8d)
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/c07ad5c6-f359-4a8a-9d46-28b170f9636b)
+
 
 
 
