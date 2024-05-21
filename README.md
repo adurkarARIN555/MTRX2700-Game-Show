@@ -45,6 +45,7 @@
 - The testing in this game can be done by checking the values sensed on the slider capacitor which are read on the Serial Port. The values should be given via serial by a comma seperated string.
 - Testing the time for which the input can be taken can be compared with the timer displayed on the GUI.
 - The expected output on the serial port at anytime should be "value1, value2, timerValue\r\n". The user of the program can open the serial port with the required port using "minicom -D <serial-port-name>".
+- The value that is given on the potentiometer should never be higher than the resistance given on the softpotentiometer.
 
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
