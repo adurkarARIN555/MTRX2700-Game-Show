@@ -25,7 +25,8 @@
 #### Before gameplay:
 1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC. To work correctly ensure that the ground values are shared between the soft potentiometers.
 ![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/c07ad5c6-f359-4a8a-9d46-28b170f9636b)
-2. On windows or mac you should find the name of the serial port that is being used for example for mac on my computer it was "/dev/tty.usbmodem2103", or on windows it was "COM9".
+2. On windows or mac you should find the name of the serial port that is being used for example for mac on my computer it was "/dev/tty.usbmodem2103", or on windows it was "COM9". These values will differ based on what peripherals are plugged in on the specific computer.
+3. Ensure that the soft potentiometer controllers are placed on a hard surface because otherwise they may not show the correct values. The soft potentiometers should also be pressed not gently as this may result in an incorrect reading.
 
 
 
@@ -39,7 +40,7 @@
 4. The user will have 15 seconds in total to make a decision on the price of the object including 3 seconds to observe the image and 12 seconds to make a decision.
 5. A decision can be made by using either of the sliders and the player that has successfully guessed the price that is closest to the actual price of the image object will win.
 6. Once the timer runs out in every game a decision on the price can no longer be made.
-7. When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
+7. When the end of the game is reached the loser is then sent to the mainwindow and displayed.
 ### Testing:
 - The testing in this game can be done by checking the values sensed on the slider capacitor which are read on the Serial Port. The values should be given via serial by a comma seperated string.
 - Testing the time for which the input can be taken can be compared with the timer displayed on the GUI.
