@@ -41,6 +41,8 @@
 6. Once the timer runs out in every game a decision on the price can no longer be made.
 7. When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
 ### Testing:
+- The testing in this game can be done by checking the values sensed on the slider capacitor which are read on the Serial Port.
+- Testing the time for which the input can be taken can be compared with the timer displayed on the GUI.
 
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
@@ -104,6 +106,7 @@
 - Test Case 3: Checks that the strength (angle) of shooting the load from the catapult is 2250 when 6 LEDs are ON.
 - Test Case 4 and 5: Are responsible to check the LED functions. Firstly, the LEDs are set to all zeros (all OFF), then, there is an increment in the number of LEDs by 1 and the TEST_ASSERT functions tests if the new state is ‘0b01111111’. Test Case 5 also does the same verification but with different number of LEDs.
 - In case any test case fails, a message is sent to the Serial port (USART1) and the program “exits”. If all tests pass, “All test cases passed” is output on the Serial port.
+- The time for each LED glowing and shifting to the next in the 8 cascading LEDs is 5ms. Hence, for the 8 LEDs, it is 40ms. This time can be measured on a hardware timer (eg: a phone timer, a Casio timer)
 
 
 ### Performance:
