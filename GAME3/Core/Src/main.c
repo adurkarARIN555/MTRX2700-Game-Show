@@ -130,9 +130,9 @@ void read_and_transmit(){
   float gyro_values[3]; 												// Array to store the gyroscope data
   BSP_GYRO_GetXYZ(&gyro_values[0]); 											// Z-axis data from gyroscope
 
-  int *ptr; 														// Pointer to be used for GPIOA IDR
-  ptr = (int *)(0x48000000 + 0x10); 											// Address of GPIOA IDR
-  int value = *ptr; 													// Gets the value at the GPIOA IDR
+  int *ptr; 														// Pointer to be used for GPIOA IDR (the button)
+  ptr = (int *)(0x48000000 + 0x10); 											// Address of GPIOA IDR (the button)
+  int value = *ptr; 													// Gets the value at the GPIOA IDR (the button)
 
   if((value&0x01) && (velocity < 4.5)){ 										// When the USER button is being pressed and the velocity is below the upper threshold, accelerate the kart
 	  velocity+=0.1; 												// Increases the kart's velocity
@@ -149,7 +149,7 @@ void read_and_transmit(){
   x_pos += velocity*cos(-steering_output); 										// Updates the x-position of the kart
   y_pos += velocity*sin(-steering_output); 										// Updates the y-position of the kart
 
-  sprintf(string_to_send, "%0.4f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos); // Formats the output string
+  sprintf(string_to_send, "%0.4f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos); 				// Formats the output string
   SerialOutputString(string_to_send, &USART1_PORT); 									// Transmits the output string over serial
 }
 
