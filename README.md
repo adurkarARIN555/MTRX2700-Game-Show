@@ -149,3 +149,6 @@ run the tests module
 
 ### Performance:
 To increase the performance of the game, we used two threads on the computer code: one to recieve data from the serial port and one to display the game on the GUI. Both microcontrollers send a significant amount of data to the computer. We reduced the amount of data being sent by converting the position to an integer, and reducing the size of the steering angle float. The full data is still tracked by the microcontroller to prevent compounding errors. 
+
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/123046600/99966b50-a5e5-405a-b8f6-f0b9ad0bcde7)
+
