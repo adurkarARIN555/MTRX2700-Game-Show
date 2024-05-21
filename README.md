@@ -13,26 +13,41 @@
 - Slider Control: The program allows the two users to control PyQt widget sliders through sliding their fingers over the potentiometer. The current value should be displayed to the screen.
 - Timer Control: The program implements a timer that the game players must complete their choice within to play the game.
 - GUI Display: The GUI displays 4 main configurations of the window to simulate the price is right game. The first part is the base loading screen. The following three configurations of the main window are the games 1-3 that are changed based on what the user has provided.
+- HardWare: The user will need 2 SpectreSymbol soft potentiometers. 1 breadboard. One USB chord and 10 wires. 
 ### System Design:
 - The game has three STM32 modules that interface with the PyQt Gui.
 - The game transfers the raw potentiometer values for each softpot along with the current timer over serial. These values are sent over serial as a comma seperated list in which these are parsed into a list in Python.
-### Detailed Design: 
-![SBD](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/d6ac0d88-d144-49fb-a772-a72be406432f)
+### System Block Diagram: 
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/2a843a68-242b-4861-8263-013f6089d3a2)
+
+
 ### Instructions for use:  
-- Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
-- The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
-- Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
-- The user will have 15 seconds in total to make a decision on the price of the object including 3 seconds to observe the image and 12 seconds to make a decision.
-- A decision can be made by using either of the sliders and the player that has successfully guessed the price that is closest to the actual price of the image object will win.
-- Once the timer runs out in every game a decision on the price can no longer be made.
-- When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
+#### Before gameplay:
+1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC. To work correctly ensu
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/c07ad5c6-f359-4a8a-9d46-28b170f9636b)
+2. 
+
+
+
+
+
+
+#### During Game Play:
+1. Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
+2. The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
+3. Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
+4. The user will have 15 seconds in total to make a decision on the price of the object including 3 seconds to observe the image and 12 seconds to make a decision.
+5. A decision can be made by using either of the sliders and the player that has successfully guessed the price that is closest to the actual price of the image object will win.
+6. Once the timer runs out in every game a decision on the price can no longer be made.
+7. When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
 ### Testing:
+
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
 - The dial gui widget represents the current time that TIM2 is counting.
 ### Individual Modules:
 - ```Timer```: The timer module sends over a serial a continuous timer signal that is only restarted once the STM reset button is pressed.
-- ```HAL PWM```: The HAL_PWM 
+- ```HAL PWM```: The HAL_PWM is 
 ## Catapult Toss:
 ### Requirement Specification:
 
@@ -116,19 +131,63 @@ A very high-level functional block diagram shows the design of the current syste
 A checkpoint system was developed to ensure no player can continuously drive backwards and forwards to cheat the lap count system. Once the checkpoint is passed (located halfway along the track), the lap counter is enabled and will be incremented once the finish line is passed. Where the player has passed the checkpoint, but then crashes their kart (position calculated outside of the track bounds), their checkpoint flag is reset. This ensures no player can pass the checkpoint, then intentionally crash to respawn near the finish line and then have their lap count increased. 
 
 ### Detailed Design: 
-![GAME3-detailed drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/e3b4c3ad-121e-4958-a579-23dc26791b86)
+![GAME3-detailedv2 drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/98b6c482-82a6-4e28-9cae-cc477e71a82b)
+
+#### .c functions
+void USART1_IRQHandler():
+- Determines how to proceed based on the interrupt given through USART1
+- If the interrupt was a 1, it resets the kart to the finish line
+- If the interrupt was a 2, it initialises player 1
+- If the interrupt was a 3, it initialises player 2
+
+void enable_clocks():
+- Enables the user of the clocks
+
+void read_and_transmit():
+- Reads the sensor data and transmits over serial
+- Computes and outputs velocity
+- Computes and outputs position
+
+#### .py functions
+class Player:
+- Store information about the serial port, position, and steering
+
+class SerialReader(QObject):
+- Creates a thread for serial data receiving
+- Two instances of the class are created - one for each player
+- Must be initialised with a serial port object (which contains the COM port, baud rate, etc.). This thread outputs the controller data
+
+class GameWindow(QWidget):
+- This is called by the integration scipt
+- The methods of this class include:
+  - def paintEvent(self, event)
+    - Updates the GUI with the backgrounds and latest postions, angles, and lap counts of each kart.
+  - def update_position(self)
+    - Checks if the calculated position is within the bound of the course, where not, it will respawn the kart and the finish line, calling 
+      def check_collided_outer(x, y) and def check_collided_inner(x, y). The collision functions take in the x and y position and determines if they breach the bounds of the track, returning a boolean for whether it has collided with the track
+    - Checks if the lap count needs to be updated through the use of the checkpoint system calling def checkpoint(x, y, passed). The 
+      checkpoint function takes the x and y position, and whether the checkpoint was previously passed. It outputs a 0 if the kart has not        passed the checkpoint or has passed the checkpoint but not the finish line, a 1 if the kart had passed the finish line, and has now         reached the finish line, and a 2 if the kart hadn't passed the checkpoint but has now passed the checkpoint.
+  - def game_won(self,winner)
+    - Sees if either player has completed the three laps.
 
 ### Instructions for use:  
 1. Connect both STM32F3 microcontrollers to the single computer.
-2. Hold the microcontroller level before the race starts (this will ensure the steering is referenced from a comfortable position).
-3. Look at the LEDs on the microcontroller, the green LEDs indicates that microcontroller is Luigi and will control the green kart, similarly, is the LEDs are red, that indicated that micrcontroller is Mario and will control the red kart.
-4. Hold down the blue USER button to accelerate the kart, and let go to decelerate.
-5. Tilt the micrcontroller along the z-axis, the same way you would rotate a car's steering wheel, to rotate the steering angle of the kart.
-6. The game will finish once the one of the players completes three laps.
+2. Change the COM ports in the game3.py script at the top of the constans. This will be done by running the find_ports.py on Mac, and on Windows, use device manager
+3. Hold the microcontroller level before the race starts (this will ensure the steering is referenced from a comfortable position).
+4. Look at the LEDs on the microcontroller, the green LEDs indicates that microcontroller is Luigi and will control the green kart, similarly, is the LEDs are red, that indicated that micrcontroller is Mario and will control the red kart.
+5. Hold down the blue USER button to accelerate the kart, and let go to decelerate.
+6. Tilt the micrcontroller along the z-axis, the same way you would rotate a car's steering wheel, to rotate the steering angle of the kart.
+7. N.B. do not touch the metal pins on the back of the microcontroller as this will cause the kart to stop moving. If this occurs, unplug and replug the controller and restart the game
+8. The game will finish once the one of the players completes three laps.
 
 ### Testing:
-run the tests module
-(explain what each of these will do)
+- The serial, digio, and timers code can all be tested through game 2.
+- Attach the microcontroller to the computer and load up the serail plotter in the Arduino IDE. From there, you will be able to move the microcontroller, and thus the gyroscope, and visualise the change in gyroscope data.
+- When the game three module recieves a list of two players, it should open the game window. Upon game termination, it should return the name of the loser via the emit function.
+- When not pressing down the blue USER button on the microcontroller, the kart assiciated with that microcontroller should not be accelerating. Similarly, after holding the blue USER button and releasing it, the kart should decelerate.
 
 ### Performance:
+To increase the performance of the game, we used two threads on the computer code: one to recieve data from the serial port and one to display the game on the GUI. Both microcontrollers send a significant amount of data to the computer. We reduced the amount of data being sent by converting the position to an integer, and reducing the size of the steering angle float. The full data is still tracked by the microcontroller to prevent compounding errors. 
+
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/123046600/99966b50-a5e5-405a-b8f6-f0b9ad0bcde7)
 
