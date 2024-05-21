@@ -17,9 +17,9 @@ outer_track_x = 380
 outer_track_y = 25
 kart_size = 60
 baud = 115200
-player1_start_x_position = 670
+player1_start_x_position = 670+228
 player1_start_y_position = 95
-player2_start_x_position = 630
+player2_start_x_position = 630+228
 player2_start_y_position = 155
 timer_ms = 40
 background_x_offset = 0
@@ -30,17 +30,14 @@ finish_line_x_offset = 940
 finish_line_y_offset = 25
 finish_line_width = 10
 finish_line_height = 195
-
 inner_background_x_offset = 328#100
 inner_background_y_offset = 198
 inner_background_width = 680
 inner_background_height = 400
-
 inner_track_width = 700
 inner_track_height = 325
 inner_track_x = 350+(228)
 inner_track_y = 220
-
 td_inner_background_x_offset = 100+228
 td_inner_background_width = 660
 player1_textbox_x_offset = 0

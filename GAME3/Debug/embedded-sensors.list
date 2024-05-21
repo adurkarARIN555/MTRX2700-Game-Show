@@ -986,32 +986,34 @@ Disassembly of section .text:
  8000c46:	bf00      	nop
 
 08000c48 <USART1_IRQHandler>:
-float y_pos;
 float x_reset_pos;
 float y_reset_pos;
 
+// Determines how to proceed based on the interrupt given through USART1
 void USART1_IRQHandler()
 {
  8000c48:	b580      	push	{r7, lr}
  8000c4a:	b084      	sub	sp, #16
  8000c4c:	af00      	add	r7, sp, #0
-	if((USART1->ISR & USART_ISR_RXNE)){
+	if((USART1->ISR & USART_ISR_RXNE)){ 										// See if there is data in the receive data register available to be read
  8000c4e:	4b2e      	ldr	r3, [pc, #184]	; (8000d08 <USART1_IRQHandler+0xc0>)
  8000c50:	69db      	ldr	r3, [r3, #28]
  8000c52:	f003 0320 	and.w	r3, r3, #32
  8000c56:	2b00      	cmp	r3, #0
  8000c58:	d051      	beq.n	8000cfe <USART1_IRQHandler+0xb6>
-		velocity = 0;
+		velocity = 0; 												// Reset the velocity
  8000c5a:	4b2c      	ldr	r3, [pc, #176]	; (8000d0c <USART1_IRQHandler+0xc4>)
  8000c5c:	f04f 0200 	mov.w	r2, #0
  8000c60:	601a      	str	r2, [r3, #0]
 		uint8_t dummy;
-		SerialReceiveChar(&USART1_PORT, &dummy);
+
+		SerialReceiveChar(&USART1_PORT, &dummy); 								// Get the character from the serial port
  8000c62:	1dfb      	adds	r3, r7, #7
  8000c64:	4619      	mov	r1, r3
  8000c66:	482a      	ldr	r0, [pc, #168]	; (8000d10 <USART1_IRQHandler+0xc8>)
  8000c68:	f000 fc6f 	bl	800154a <SerialReceiveChar>
-		if(dummy == '1'){
+
+		if(dummy == '1'){ 											// Indicates that the kart went outside of the track and needs to be respawned
  8000c6c:	79fb      	ldrb	r3, [r7, #7]
  8000c6e:	2b31      	cmp	r3, #49	; 0x31
  8000c70:	d108      	bne.n	8000c84 <USART1_IRQHandler+0x3c>
@@ -1032,18 +1034,18 @@ void USART1_IRQHandler()
 	}
 }
  8000c82:	e03c      	b.n	8000cfe <USART1_IRQHandler+0xb6>
-		else if(dummy == '2'){
+		else if(dummy == '2'){ 											// Used to initialise player 1, Mario
  8000c84:	79fb      	ldrb	r3, [r7, #7]
  8000c86:	2b32      	cmp	r3, #50	; 0x32
  8000c88:	d11b      	bne.n	8000cc2 <USART1_IRQHandler+0x7a>
-			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
+			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1; 						// Get the address of the LED panel
  8000c8a:	4b26      	ldr	r3, [pc, #152]	; (8000d24 <USART1_IRQHandler+0xdc>)
  8000c8c:	60bb      	str	r3, [r7, #8]
-			*led_register = 0b00100010;
+			*led_register = 0b00100010; 									// Set the red LEDs on
  8000c8e:	68bb      	ldr	r3, [r7, #8]
  8000c90:	2222      	movs	r2, #34	; 0x22
  8000c92:	701a      	strb	r2, [r3, #0]
-			x_reset_pos = 670;
+			x_reset_pos = 670+228;
  8000c94:	4b1f      	ldr	r3, [pc, #124]	; (8000d14 <USART1_IRQHandler+0xcc>)
  8000c96:	4a24      	ldr	r2, [pc, #144]	; (8000d28 <USART1_IRQHandler+0xe0>)
  8000c98:	601a      	str	r2, [r3, #0]
@@ -1071,18 +1073,18 @@ void USART1_IRQHandler()
  8000cbe:	601a      	str	r2, [r3, #0]
 }
  8000cc0:	e01d      	b.n	8000cfe <USART1_IRQHandler+0xb6>
-		else if(dummy == '3'){
+		else if(dummy == '3'){ 											// Used to initialise player 2, Luigi
  8000cc2:	79fb      	ldrb	r3, [r7, #7]
  8000cc4:	2b33      	cmp	r3, #51	; 0x33
  8000cc6:	d11a      	bne.n	8000cfe <USART1_IRQHandler+0xb6>
-			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1;
+			uint8_t *led_register = ((uint8_t*)&(GPIOE->ODR)) + 1; 						// Get the address of the LED panel
  8000cc8:	4b16      	ldr	r3, [pc, #88]	; (8000d24 <USART1_IRQHandler+0xdc>)
  8000cca:	60fb      	str	r3, [r7, #12]
-			*led_register = 0b10001000;
+			*led_register = 0b10001000; 									// Set the green LEDs on
  8000ccc:	68fb      	ldr	r3, [r7, #12]
  8000cce:	2288      	movs	r2, #136	; 0x88
  8000cd0:	701a      	strb	r2, [r3, #0]
-			x_reset_pos = 630;
+			x_reset_pos = 630+228;
  8000cd2:	4b10      	ldr	r3, [pc, #64]	; (8000d14 <USART1_IRQHandler+0xcc>)
  8000cd4:	4a18      	ldr	r2, [pc, #96]	; (8000d38 <USART1_IRQHandler+0xf0>)
  8000cd6:	601a      	str	r2, [r3, #0]
@@ -1122,33 +1124,31 @@ void USART1_IRQHandler()
  8000d1c:	200006c8 	.word	0x200006c8
  8000d20:	200006c0 	.word	0x200006c0
  8000d24:	48001015 	.word	0x48001015
- 8000d28:	44278000 	.word	0x44278000
+ 8000d28:	44608000 	.word	0x44608000
  8000d2c:	42be0000 	.word	0x42be0000
  8000d30:	200006b4 	.word	0x200006b4
  8000d34:	200006b8 	.word	0x200006b8
- 8000d38:	441d8000 	.word	0x441d8000
+ 8000d38:	44568000 	.word	0x44568000
  8000d3c:	431b0000 	.word	0x431b0000
 
 08000d40 <enable_clocks>:
 
+// Enables the use of clocks
 void enable_clocks() {
  8000d40:	b480      	push	{r7}
  8000d42:	af00      	add	r7, sp, #0
-	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOEEN;
+	RCC->AHBENR |= RCC_AHBENR_GPIOAEN | RCC_AHBENR_GPIOCEN | RCC_AHBENR_GPIOEEN; 					// Enables GPIOA, GPIOC, and GPIOE clocks
  8000d44:	4b08      	ldr	r3, [pc, #32]	; (8000d68 <enable_clocks+0x28>)
  8000d46:	695b      	ldr	r3, [r3, #20]
  8000d48:	4a07      	ldr	r2, [pc, #28]	; (8000d68 <enable_clocks+0x28>)
  8000d4a:	f443 1328 	orr.w	r3, r3, #2752512	; 0x2a0000
  8000d4e:	6153      	str	r3, [r2, #20]
-
-	// worked
-	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN;
+	RCC->APB1ENR |= RCC_APB1ENR_TIM2EN; 										// Enables TIM2 clock
  8000d50:	4b05      	ldr	r3, [pc, #20]	; (8000d68 <enable_clocks+0x28>)
  8000d52:	69db      	ldr	r3, [r3, #28]
  8000d54:	4a04      	ldr	r2, [pc, #16]	; (8000d68 <enable_clocks+0x28>)
  8000d56:	f043 0301 	orr.w	r3, r3, #1
  8000d5a:	61d3      	str	r3, [r2, #28]
-	// worked
 }
  8000d5c:	bf00      	nop
  8000d5e:	46bd      	mov	sp, r7
@@ -1160,11 +1160,12 @@ void enable_clocks() {
 
 08000d70 <read_and_transmit>:
 
+// Reads the sensor data and transmits over serial
 void read_and_transmit(){
  8000d70:	e92d 43b0 	stmdb	sp!, {r4, r5, r7, r8, r9, lr}
  8000d74:	b09a      	sub	sp, #104	; 0x68
  8000d76:	af02      	add	r7, sp, #8
-  uint8_t string_to_send[64] = "This is a string !\r\n";
+  uint8_t string_to_send[64] = "This is a string !\r\n"; 								// Test string
  8000d78:	4b91      	ldr	r3, [pc, #580]	; (8000fc0 <read_and_transmit+0x250>)
  8000d7a:	f107 0410 	add.w	r4, r7, #16
  8000d7e:	461d      	mov	r5, r3
@@ -1183,26 +1184,22 @@ void read_and_transmit(){
  8000d9a:	4618      	mov	r0, r3
  8000d9c:	f006 fc1b 	bl	80075d6 <memset>
 
-  float gyro_values[3];
-  BSP_GYRO_GetXYZ(&gyro_values[0]);
+  float gyro_values[3]; 												// Array to store the gyroscope data
+  BSP_GYRO_GetXYZ(&gyro_values[0]); 											// Z-axis data from gyroscope
  8000da0:	1d3b      	adds	r3, r7, #4
  8000da2:	4618      	mov	r0, r3
  8000da4:	f004 fc40 	bl	8005628 <BSP_GYRO_GetXYZ>
 
-  int *ptr;
-
-  // Assign the desired address to the pointer
-  ptr = (int *)(0x48000000 + 0x10);
+  int *ptr; 														// Pointer to be used for GPIOA IDR
+  ptr = (int *)(0x48000000 + 0x10); 											// Address of GPIOA IDR
  8000da8:	4b86      	ldr	r3, [pc, #536]	; (8000fc4 <read_and_transmit+0x254>)
  8000daa:	65fb      	str	r3, [r7, #92]	; 0x5c
-
-  // Dereference the pointer to get the value at that address
-  int value = *ptr;
+  int value = *ptr; 													// Gets the value at the GPIOA IDR
  8000dac:	6dfb      	ldr	r3, [r7, #92]	; 0x5c
  8000dae:	681b      	ldr	r3, [r3, #0]
  8000db0:	65bb      	str	r3, [r7, #88]	; 0x58
 
-  if((value&0x01) && (velocity < 4.5)){
+  if((value&0x01) && (velocity < 4.5)){ 										// When the USER button is being pressed and the velocity is below the upper threshold, accelerate the kart
  8000db2:	6dbb      	ldr	r3, [r7, #88]	; 0x58
  8000db4:	f003 0301 	and.w	r3, r3, #1
  8000db8:	2b00      	cmp	r3, #0
@@ -1213,7 +1210,7 @@ void read_and_transmit(){
  8000dc6:	eef4 7ac7 	vcmpe.f32	s15, s14
  8000dca:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  8000dce:	d513      	bpl.n	8000df8 <read_and_transmit+0x88>
-	  velocity+=0.1;
+	  velocity+=0.1; 												// Increases the kart's velocity
  8000dd0:	4b7d      	ldr	r3, [pc, #500]	; (8000fc8 <read_and_transmit+0x258>)
  8000dd2:	681b      	ldr	r3, [r3, #0]
  8000dd4:	4618      	mov	r0, r3
@@ -1231,7 +1228,7 @@ void read_and_transmit(){
  8000df4:	6013      	str	r3, [r2, #0]
  8000df6:	e01f      	b.n	8000e38 <read_and_transmit+0xc8>
   }
-  else if(!(value&0x01) && (velocity > 0)){
+  else if(!(value&0x01) && (velocity > 0)){ 										// When the USER button is not being pressed and the velocity is above the lower threshold, decelerate the kart
  8000df8:	6dbb      	ldr	r3, [r7, #88]	; 0x58
  8000dfa:	f003 0301 	and.w	r3, r3, #1
  8000dfe:	2b00      	cmp	r3, #0
@@ -1241,7 +1238,7 @@ void read_and_transmit(){
  8000e08:	eef5 7ac0 	vcmpe.f32	s15, #0.0
  8000e0c:	eef1 fa10 	vmrs	APSR_nzcv, fpscr
  8000e10:	dd12      	ble.n	8000e38 <read_and_transmit+0xc8>
-	  velocity -= 0.05;
+	  velocity -= 0.05;												// Decreases the kart's velocity
  8000e12:	4b6d      	ldr	r3, [pc, #436]	; (8000fc8 <read_and_transmit+0x258>)
  8000e14:	681b      	ldr	r3, [r3, #0]
  8000e16:	4618      	mov	r0, r3
@@ -1259,19 +1256,19 @@ void read_and_transmit(){
  8000e36:	6013      	str	r3, [r2, #0]
   }
 
-  float delta_angle = gyro_values[2]/20000;
+  float delta_angle = gyro_values[2]/20000; 										// Gets the new gyroscope data
  8000e38:	ed97 7a03 	vldr	s14, [r7, #12]
  8000e3c:	eddf 6a63 	vldr	s13, [pc, #396]	; 8000fcc <read_and_transmit+0x25c>
  8000e40:	eec7 7a26 	vdiv.f32	s15, s14, s13
  8000e44:	edc7 7a15 	vstr	s15, [r7, #84]	; 0x54
-  angle += delta_angle;
+  angle += delta_angle; 												// Adds the change in the gyroscope angle to the current angle of the kart
  8000e48:	4b61      	ldr	r3, [pc, #388]	; (8000fd0 <read_and_transmit+0x260>)
  8000e4a:	ed93 7a00 	vldr	s14, [r3]
  8000e4e:	edd7 7a15 	vldr	s15, [r7, #84]	; 0x54
  8000e52:	ee77 7a27 	vadd.f32	s15, s14, s15
  8000e56:	4b5e      	ldr	r3, [pc, #376]	; (8000fd0 <read_and_transmit+0x260>)
  8000e58:	edc3 7a00 	vstr	s15, [r3]
-  steering_output_raw += angle / 10;
+  steering_output_raw += angle / 10; 											// Scales down the angle to be applied to the kart's steering
  8000e5c:	4b5c      	ldr	r3, [pc, #368]	; (8000fd0 <read_and_transmit+0x260>)
  8000e5e:	edd3 7a00 	vldr	s15, [r3]
  8000e62:	eef2 6a04 	vmov.f32	s13, #36	; 0x41200000  10.0
@@ -1281,15 +1278,14 @@ void read_and_transmit(){
  8000e70:	ee77 7a27 	vadd.f32	s15, s14, s15
  8000e74:	4b57      	ldr	r3, [pc, #348]	; (8000fd4 <read_and_transmit+0x264>)
  8000e76:	edc3 7a00 	vstr	s15, [r3]
-
-  float steering_output = steering_output_raw/250.0;
+  float steering_output = steering_output_raw/250.0; 									// Updates the kart's steering angle
  8000e7a:	4b56      	ldr	r3, [pc, #344]	; (8000fd4 <read_and_transmit+0x264>)
  8000e7c:	ed93 7a00 	vldr	s14, [r3]
  8000e80:	eddf 6a55 	vldr	s13, [pc, #340]	; 8000fd8 <read_and_transmit+0x268>
  8000e84:	eec7 7a26 	vdiv.f32	s15, s14, s13
  8000e88:	edc7 7a14 	vstr	s15, [r7, #80]	; 0x50
 
-  x_pos += velocity*cos(-steering_output);
+  x_pos += velocity*cos(-steering_output); 										// Updates the x-position of the kart
  8000e8c:	4b53      	ldr	r3, [pc, #332]	; (8000fdc <read_and_transmit+0x26c>)
  8000e8e:	681b      	ldr	r3, [r3, #0]
  8000e90:	4618      	mov	r0, r3
@@ -1328,7 +1324,7 @@ void read_and_transmit(){
  8000eea:	4603      	mov	r3, r0
  8000eec:	4a3b      	ldr	r2, [pc, #236]	; (8000fdc <read_and_transmit+0x26c>)
  8000eee:	6013      	str	r3, [r2, #0]
-  y_pos += velocity*sin(-steering_output);
+  y_pos += velocity*sin(-steering_output); 										// Updates the y-position of the kart
  8000ef0:	4b3b      	ldr	r3, [pc, #236]	; (8000fe0 <read_and_transmit+0x270>)
  8000ef2:	681b      	ldr	r3, [r3, #0]
  8000ef4:	4618      	mov	r0, r3
@@ -1368,7 +1364,7 @@ void read_and_transmit(){
  8000f50:	4a23      	ldr	r2, [pc, #140]	; (8000fe0 <read_and_transmit+0x270>)
  8000f52:	6013      	str	r3, [r2, #0]
 
-  sprintf(string_to_send, "%0.6f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos);
+  sprintf(string_to_send, "%0.4f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos); // Formats the output string
  8000f54:	edd7 7a14 	vldr	s15, [r7, #80]	; 0x50
  8000f58:	eef1 7a67 	vneg.f32	s15, s15
  8000f5c:	ee17 3a90 	vmov	r3, s15
@@ -1389,7 +1385,7 @@ void read_and_transmit(){
  8000f8c:	9400      	str	r4, [sp, #0]
  8000f8e:	4915      	ldr	r1, [pc, #84]	; (8000fe4 <read_and_transmit+0x274>)
  8000f90:	f006 fabe 	bl	8007510 <siprintf>
-  SerialOutputString(string_to_send, &USART1_PORT);
+  SerialOutputString(string_to_send, &USART1_PORT); 									// Transmits the output string over serial
  8000f94:	f107 0310 	add.w	r3, r7, #16
  8000f98:	4913      	ldr	r1, [pc, #76]	; (8000fe8 <read_and_transmit+0x278>)
  8000f9a:	4618      	mov	r0, r3
@@ -1474,9 +1470,9 @@ int main(void)
   enable_interrupt_timer2();
  8001026:	f000 fdaf 	bl	8001b88 <enable_interrupt_timer2>
 
-  interval_mode(125, &read_and_transmit);
+  interval_mode(100, &read_and_transmit);
  800102a:	4903      	ldr	r1, [pc, #12]	; (8001038 <main+0x4c>)
- 800102c:	207d      	movs	r0, #125	; 0x7d
+ 800102c:	2064      	movs	r0, #100	; 0x64
  800102e:	f000 fd51 	bl	8001ad4 <interval_mode>
   /* USER CODE END 2 */
 

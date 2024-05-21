@@ -74,8 +74,8 @@ float angle;
 float steering_output_raw;
 float x_pos;
 float y_pos;
-float x_reset_pos;
-float y_reset_pos;
+float x_reset_pos = 670+228;
+float y_reset_pos = 95;
 
 // Determines how to proceed based on the interrupt given through USART1
 void USART1_IRQHandler()
@@ -95,7 +95,7 @@ void USART1_IRQHandler()
 			*led_register = 0b00100010; 									// Set the red LEDs on
 
 			// Sets the kart position and angle
-			x_reset_pos = 670;
+			x_reset_pos = 670+228;
 			y_reset_pos = 95;
 			x_pos = x_reset_pos;
 			y_pos = y_reset_pos;
@@ -107,7 +107,7 @@ void USART1_IRQHandler()
 			*led_register = 0b10001000; 									// Set the green LEDs on
 
 			// Sets the kart position and angle
-			x_reset_pos = 630;
+			x_reset_pos = 630+228;
 			y_reset_pos = 155;
 			x_pos = x_reset_pos;
 			y_pos = y_reset_pos;
@@ -149,7 +149,7 @@ void read_and_transmit(){
   x_pos += velocity*cos(-steering_output); 										// Updates the x-position of the kart
   y_pos += velocity*sin(-steering_output); 										// Updates the y-position of the kart
 
-  sprintf(string_to_send, "%0.6f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos); // Formats the output string
+  sprintf(string_to_send, "%0.4f,%d,%d\r\n", -steering_output, (int)x_pos, (int)y_pos); // Formats the output string
   SerialOutputString(string_to_send, &USART1_PORT); 									// Transmits the output string over serial
 }
 
@@ -197,7 +197,7 @@ int main(void)
   trigger_prescaler(1000);
   enable_interrupt_timer2();
 
-  interval_mode(125, &read_and_transmit);
+  interval_mode(100, &read_and_transmit);
   /* USER CODE END 2 */
 
 
