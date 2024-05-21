@@ -33,6 +33,8 @@
 
 
 #### During Game Play:
+![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/18979a68-848c-4a6e-8ff1-1aabd0c133f4)
+
 1. Plug the STM32 into the computer with the project already loaded. Once the microcontroller is running with the code for the game then enter all the data into the main window and press "Start game"
 2. The game needs 4 players in which the first two games are played by all 4 users. The final game is played by the losers from games 1 and 2.
 3. Once Start Game is pressed the default start window for the game will display. The reset button can be clicked on the microcontroller to switch to each game configuration.
