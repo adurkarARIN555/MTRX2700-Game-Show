@@ -23,9 +23,9 @@
 
 ### Instructions for use:  
 #### Before gameplay:
-1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC. To work correctly ensu
+1. Assemble the board as shown in the picture with the wiper of each soft potentiometer connected to the pin that has been chosen in the IOC. To work correctly ensure that the ground values are shared between the soft potentiometers.
 ![image](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160560741/c07ad5c6-f359-4a8a-9d46-28b170f9636b)
-2. 
+2. On windows or mac you should find the name of the serial port that is being used for example for mac on my computer it was "/dev/tty.usbmodem2103", or on windows it was "COM9".
 
 
 
@@ -41,8 +41,9 @@
 6. Once the timer runs out in every game a decision on the price can no longer be made.
 7. When the end of the game is reached the loser is tehn sent to the mainwindow and displayed.
 ### Testing:
-- The testing in this game can be done by checking the values sensed on the slider capacitor which are read on the Serial Port.
+- The testing in this game can be done by checking the values sensed on the slider capacitor which are read on the Serial Port. The values should be given via serial by a comma seperated string.
 - Testing the time for which the input can be taken can be compared with the timer displayed on the GUI.
+- The expected output on the serial port at anytime should be "value1, value2, timerValue\r\n". The user of the program can open the serial port with the required port using "minicom -D <serial-port-name>".
 
 ### Performance:
 - The current slider value represents current resistance from the potentiometer at that time.
