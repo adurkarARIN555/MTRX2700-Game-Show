@@ -133,6 +133,24 @@ A checkpoint system was developed to ensure no player can continuously drive bac
 ### Detailed Design: 
 ![GAME3-detailedv2 drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/98b6c482-82a6-4e28-9cae-cc477e71a82b)
 
+#### .c functions
+
+#### .py functions
+class Player:
+Store information about the serial port, position, and steering
+
+class SerialReader(QObject)
+Creates a thread for serial data receiving
+Two instances of the class are created - one for each player
+Must be initialised with a serial port object (which contains the COM port, baud rate, etc.). This thread outputs the controller data
+
+class GameWindow(QWidget):
+This is called by the integration scipt
+The methods of this class include:
+- def paintEvent(self, event)
+  - Updates the GUI with the backgrounds and latest postions, angles, and lap counts of each kart
+- 
+
 ### Instructions for use:  
 1. Connect both STM32F3 microcontrollers to the single computer.
 2. Change the COM ports in the game3.py script at the top of the constans. This will be done by running the find_ports.py on Mac, and on Windows, use device manager
@@ -144,8 +162,10 @@ A checkpoint system was developed to ensure no player can continuously drive bac
 8. The game will finish once the one of the players completes three laps.
 
 ### Testing:
-run the tests module
-(explain what each of these will do)
+- The serial, digio, and timers code can all be tested through game 2.
+- Attach the microcontroller to the computer and load up the serail plotter in the Arduino IDE. From there, you will be able to move the microcontroller, and thus the gyroscope, and visualise the change in gyroscope data.
+- When the game three module recieves a list of two players, it should open the game window. Upon game termination, it should return the name of the loser via the emit function.
+- When not pressing down the blue USER button on the microcontroller, the kart assiciated with that microcontroller should not be accelerating. Similarly, after holding the blue USER button and releasing it, the kart should decelerate.
 
 ### Performance:
 To increase the performance of the game, we used two threads on the computer code: one to recieve data from the serial port and one to display the game on the GUI. Both microcontrollers send a significant amount of data to the computer. We reduced the amount of data being sent by converting the position to an integer, and reducing the size of the steering angle float. The full data is still tracked by the microcontroller to prevent compounding errors. 
