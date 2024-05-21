@@ -134,22 +134,41 @@ A checkpoint system was developed to ensure no player can continuously drive bac
 ![GAME3-detailedv2 drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/98b6c482-82a6-4e28-9cae-cc477e71a82b)
 
 #### .c functions
+void USART1_IRQHandler():
+- Determines how to proceed based on the interrupt given through USART1
+- If the interrupt was a 1, it resets the kart to the finish line
+- If the interrupt was a 2, it initialises player 1
+- If the interrupt was a 3, it initialises player 2
+
+void enable_clocks():
+- Enables the user of the clocks
+
+void read_and_transmit():
+- Reads the sensor data and transmits over serial
+- Computes and outputs velocity
+- Computes and outputs position
 
 #### .py functions
 class Player:
-Store information about the serial port, position, and steering
+- Store information about the serial port, position, and steering
 
-class SerialReader(QObject)
-Creates a thread for serial data receiving
-Two instances of the class are created - one for each player
-Must be initialised with a serial port object (which contains the COM port, baud rate, etc.). This thread outputs the controller data
+class SerialReader(QObject):
+- Creates a thread for serial data receiving
+- Two instances of the class are created - one for each player
+- Must be initialised with a serial port object (which contains the COM port, baud rate, etc.). This thread outputs the controller data
 
 class GameWindow(QWidget):
-This is called by the integration scipt
-The methods of this class include:
-- def paintEvent(self, event)
-  - Updates the GUI with the backgrounds and latest postions, angles, and lap counts of each kart
-- 
+- This is called by the integration scipt
+- The methods of this class include:
+  - def paintEvent(self, event)
+    - Updates the GUI with the backgrounds and latest postions, angles, and lap counts of each kart.
+  - def update_position(self)
+    - Checks if the calculated position is within the bound of the course, where not, it will respawn the kart and the finish line, calling 
+      def check_collided_outer(x, y) and def check_collided_inner(x, y). The collision functions take in the x and y position and determines if they breach the bounds of the track, returning a boolean for whether it has collided with the track
+    - Checks if the lap count needs to be updated through the use of the checkpoint system calling def checkpoint(x, y, passed). The 
+      checkpoint function takes the x and y position, and whether the checkpoint was previously passed. It outputs a 0 if the kart has not        passed the checkpoint or has passed the checkpoint but not the finish line, a 1 if the kart had passed the finish line, and has now         reached the finish line, and a 2 if the kart hadn't passed the checkpoint but has now passed the checkpoint.
+  - def game_won(self,winner)
+    - Sees if either player has completed the three laps.
 
 ### Instructions for use:  
 1. Connect both STM32F3 microcontrollers to the single computer.
