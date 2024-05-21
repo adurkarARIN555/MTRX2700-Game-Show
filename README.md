@@ -131,7 +131,7 @@ A very high-level functional block diagram shows the design of the current syste
 A checkpoint system was developed to ensure no player can continuously drive backwards and forwards to cheat the lap count system. Once the checkpoint is passed (located halfway along the track), the lap counter is enabled and will be incremented once the finish line is passed. Where the player has passed the checkpoint, but then crashes their kart (position calculated outside of the track bounds), their checkpoint flag is reset. This ensures no player can pass the checkpoint, then intentionally crash to respawn near the finish line and then have their lap count increased. 
 
 ### Detailed Design: 
-![GAME3-detailed drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/e3b4c3ad-121e-4958-a579-23dc26791b86)
+![GAME3-detailedv2 drawio](https://github.com/adurkarARIN555/MTRX2700-Game-Show/assets/160551764/98b6c482-82a6-4e28-9cae-cc477e71a82b)
 
 ### Instructions for use:  
 1. Connect both STM32F3 microcontrollers to the single computer.
