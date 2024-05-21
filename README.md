@@ -135,15 +135,17 @@ A checkpoint system was developed to ensure no player can continuously drive bac
 
 ### Instructions for use:  
 1. Connect both STM32F3 microcontrollers to the single computer.
-2. Hold the microcontroller level before the race starts (this will ensure the steering is referenced from a comfortable position).
-3. Look at the LEDs on the microcontroller, the green LEDs indicates that microcontroller is Luigi and will control the green kart, similarly, is the LEDs are red, that indicated that micrcontroller is Mario and will control the red kart.
-4. Hold down the blue USER button to accelerate the kart, and let go to decelerate.
-5. Tilt the micrcontroller along the z-axis, the same way you would rotate a car's steering wheel, to rotate the steering angle of the kart.
-6. The game will finish once the one of the players completes three laps.
+2. Change the COM ports in the game3.py script at the top of the constans. This will be done by running the find_ports.py on Mac, and on Windows, use device manager
+3. Hold the microcontroller level before the race starts (this will ensure the steering is referenced from a comfortable position).
+4. Look at the LEDs on the microcontroller, the green LEDs indicates that microcontroller is Luigi and will control the green kart, similarly, is the LEDs are red, that indicated that micrcontroller is Mario and will control the red kart.
+5. Hold down the blue USER button to accelerate the kart, and let go to decelerate.
+6. Tilt the micrcontroller along the z-axis, the same way you would rotate a car's steering wheel, to rotate the steering angle of the kart.
+7. N.B. do not touch the metal pins on the back of the microcontroller as this will cause the kart to stop moving. If this occurs, unplug and replug the controller and restart the game
+8. The game will finish once the one of the players completes three laps.
 
 ### Testing:
 run the tests module
 (explain what each of these will do)
 
 ### Performance:
-
+To increase the performance of the game, we used two threads on the computer code: one to recieve data from the serial port and one to display the game on the GUI. Both microcontrollers send a significant amount of data to the computer. We reduced the amount of data being sent by converting the position to an integer, and reducing the size of the steering angle float. The full data is still tracked by the microcontroller to prevent compounding errors. 
