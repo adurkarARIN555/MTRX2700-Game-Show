@@ -50,7 +50,8 @@
 - The dial gui widget represents the current time that TIM2 is counting.
 ### Individual Modules:
 - ```Timer```: The timer module sends over a serial a continuous timer signal that is only restarted once the STM reset button is pressed.
-- ```HAL PWM```: The HAL_PWM is 
+- ```HAL ADC```: The HAL_ADC was configured to take in the soft potentiometer values. The purpose of this was to have two soft potentiometer being read from ADC1 and ADC4 on pins PB1 and P012.
+- ```Serial```: The serial module was responsible for transmitting the strings over serial. The serial strings were transmitted via comma seperated string that was parsed for the extracted values.
 ## Catapult Toss:
 ### Requirement Specification:
 
